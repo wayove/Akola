@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chaotic India — Master Rulebook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#12151c;
+    --ink-2:#1a1f29;
+    --ink-3:#232a37;
+    --paper:#e9e1cd;
+    --paper-2:#f3ecdb;
+    --marigold:#d9a62e;
+    --marigold-dim:#a9812a;
+    --crimson:#b0453f;
+    --teal:#3f7d68;
+    --text-dark:#242017;
+    --text-light:#ece4d0;
+    --text-dim:#9aa0ad;
+    --line: rgba(236,228,208,0.12);
+    --line-paper: rgba(36,32,23,0.14);
+  }
+  *{ box-sizing:border-box; }
+  body{
+    margin:0;
+    background:var(--ink);
+    color:var(--text-dark);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{ color:var(--marigold-dim); }
+
+  header{
+    background:linear-gradient(180deg,var(--ink-2),var(--ink));
+    border-bottom:1px solid var(--line);
+    padding:30px 28px;
+    text-align:center;
+  }
+  header h1{
+    font-family:'Fraunces',serif;
+    font-weight:700;
+    font-size:2.1rem;
+    color:var(--text-light);
+    margin:0 0 6px;
+    letter-spacing:0.01em;
+  }
+  header p{
+    color:var(--text-dim);
+    font-size:0.9rem;
+    margin:0;
+  }
+
+  .layout{
+    display:grid;
+    grid-template-columns:280px 1fr;
+    max-width:1200px;
+    margin:0 auto;
+  }
+
+  nav.toc{
+    background:var(--ink-2);
+    padding:26px 22px;
+    position:sticky;
+    top:0;
+    align-self:start;
+    max-height:100vh;
+    overflow-y:auto;
+    border-right:1px solid var(--line);
+  }
+  nav.toc h4{
+    font-family:'Fraunces',serif;
+    color:var(--marigold);
+    font-size:0.95rem;
+    margin:0 0 14px;
+    font-weight:600;
+  }
+  nav.toc ul{ list-style:none; padding-left:0; margin:0; }
+  nav.toc ul ul{ padding-left:14px; }
+  nav.toc li{ margin:2px 0; }
+  nav.toc a{
+    color:var(--text-dim);
+    text-decoration:none;
+    font-size:0.82rem;
+    line-height:1.6;
+    display:block;
+    transition:color .12s ease;
+  }
+  nav.toc a:hover{ color:var(--text-light); }
+
+  main{
+    background:var(--paper-2);
+    padding:44px 56px 90px;
+  }
+  main h1{
+    font-family:'Fraunces',serif;
+    font-size:1.9rem;
+    font-weight:700;
+    color:var(--text-dark);
+    border-bottom:2px solid var(--marigold);
+    padding-bottom:14px;
+    margin:48px 0 20px;
+  }
+  main h1:first-child{ margin-top:0; }
+  main h2{
+    font-family:'Fraunces',serif;
+    font-size:1.4rem;
+    font-weight:600;
+    color:var(--text-dark);
+    margin:36px 0 14px;
+    padding-top:6px;
+    border-top:1px solid var(--line-paper);
+  }
+  main h3{
+    font-family:'Fraunces',serif;
+    font-size:1.12rem;
+    font-weight:600;
+    color:#4a4130;
+    margin:26px 0 10px;
+  }
+  main p{
+    line-height:1.65;
+    color:#3a352a;
+    font-size:0.96rem;
+    margin:0 0 14px;
+    max-width:74ch;
+  }
+  main ul, main ol{
+    line-height:1.65;
+    color:#3a352a;
+    font-size:0.96rem;
+    margin:0 0 14px;
+    padding-left:22px;
+  }
+  main li{ margin-bottom:4px; }
+  main strong{ color:var(--text-dark); }
+  main em{ color:#6b6350; }
+  main hr{
+    border:none;
+    border-top:1px solid var(--line-paper);
+    margin:34px 0;
+  }
+  main code{
+    font-family:'IBM Plex Mono',monospace;
+    background:rgba(36,32,23,0.08);
+    padding:1px 5px;
+    border-radius:3px;
+    font-size:0.86em;
+  }
+
+  main table{
+    width:100%;
+    border-collapse:collapse;
+    margin:6px 0 22px;
+    font-size:0.88rem;
+    background:var(--paper);
+    border-radius:6px;
+    overflow:hidden;
+  }
+  main thead th{
+    background:var(--ink);
+    color:var(--marigold);
+    text-align:left;
+    padding:10px 12px;
+    font-weight:600;
+    font-size:0.78rem;
+    text-transform:uppercase;
+    letter-spacing:0.03em;
+  }
+  main tbody td{
+    padding:9px 12px;
+    border-bottom:1px solid var(--line-paper);
+    vertical-align:top;
+    color:#3a352a;
+  }
+  main tbody tr:last-child td{ border-bottom:none; }
+  main tbody tr:nth-child(even){ background:rgba(36,32,23,0.03); }
+
+  .back-to-top{
+    position:fixed;
+    bottom:24px;
+    right:24px;
+    background:var(--marigold);
+    color:var(--ink);
+    border:none;
+    padding:10px 18px;
+    border-radius:100px;
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:0.8rem;
+    cursor:pointer;
+    box-shadow:0 4px 16px rgba(0,0,0,0.3);
+    text-decoration:none;
+  }
+
+  @media(max-width:900px){
+    .layout{ grid-template-columns:1fr; }
+    nav.toc{ position:static; max-height:none; border-right:none; border-bottom:1px solid var(--line); }
+    main{ padding:32px 22px 70px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Chaotic India</h1>
+  <p>Master Rulebook — consolidated reference build</p>
+</header>
+
+<div class="layout">
+  <nav class="toc" id="tocMount"></nav>
+  <main id="mainMount"></main>
+</div>
+
+<a href="#top" class="back-to-top">↑ Top</a>
+
+<script id="toc-data" type="text/plain">&lt;div class="toc"&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#chaotic-india-master-rules-document-v4-consolidated"&gt;CHAOTIC INDIA — Master Rules Document (v4, Consolidated)&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#table-of-contents"&gt;TABLE OF CONTENTS&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#part-1-core-loop-national-stats"&gt;PART 1 — CORE LOOP &amp;amp; NATIONAL STATS&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#11-the-core-loop"&gt;1.1 The Core Loop&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#12-national-stats-0100-unless-noted"&gt;1.2 National Stats (0–100 unless noted)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#part-2-population-system"&gt;PART 2 — POPULATION SYSTEM&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#part-3-action-points"&gt;PART 3 — ACTION POINTS&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#part-4-the-interference-system"&gt;PART 4 — THE INTERFERENCE SYSTEM&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#41-capacity-the-lever-sabotage-pulls"&gt;4.1 Capacity — the lever sabotage pulls&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#42-interference-actions-available-to-every-department"&gt;4.2 Interference Actions (available to every department)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#43-countermeasures-free-once-per-round-available-off-turn"&gt;4.3 Countermeasures (free, once per round, available off-turn)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#44-worked-example"&gt;4.4 Worked Example&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#part-5-all-9-departments-full"&gt;PART 5 — ALL 9 DEPARTMENTS (FULL)&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#51-police-commissioner"&gt;5.1 Police Commissioner&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#52-health-minister"&gt;5.2 Health Minister&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#53-education-minister"&gt;5.3 Education Minister&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#54-transport-minister"&gt;5.4 Transport Minister&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#55-municipal-commissioner"&gt;5.5 Municipal Commissioner&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#56-food-commissioner"&gt;5.6 Food Commissioner&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#57-finance-minister"&gt;5.7 Finance Minister&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#58-media-head"&gt;5.8 Media Head&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#59-judiciary"&gt;5.9 Judiciary&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#510-prime-minister"&gt;5.10 Prime Minister&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#part-6-elections"&gt;PART 6 — ELECTIONS&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#part-7-victory-conditions"&gt;PART 7 — VICTORY CONDITIONS&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#part-8-crisis-deck-40-cards"&gt;PART 8 — CRISIS DECK (40 CARDS)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#part-9-2-player-scaling"&gt;PART 9 — 2-PLAYER SCALING&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#part-10-solo-mode"&gt;PART 10 — SOLO MODE&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#part-11-full-worked-round-round-6-4-players"&gt;PART 11 — FULL WORKED ROUND (Round 6, 4 players)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#part-12-component-list-build-priority"&gt;PART 12 — COMPONENT LIST &amp;amp; BUILD PRIORITY&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#part-13-quick-reference-summary-table"&gt;PART 13 — QUICK-REFERENCE SUMMARY TABLE&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+</script>
+<script id="body-data" type="text/plain">&lt;h1 id="chaotic-india-master-rules-document-v4-consolidated"&gt;CHAOTIC INDIA — Master Rules Document (v4, Consolidated)&lt;/h1&gt;
+&lt;p&gt;&lt;em&gt;Everything from v1–v3, merged, gap-filled, and reorganized into one build-ready document.&lt;/em&gt;&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h2 id="table-of-contents"&gt;TABLE OF CONTENTS&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Part 1: Core Loop &amp;amp; National Stats&lt;/li&gt;
+&lt;li&gt;Part 2: Population System&lt;/li&gt;
+&lt;li&gt;Part 3: Action Points&lt;/li&gt;
+&lt;li&gt;Part 4: The Interference System&lt;/li&gt;
+&lt;li&gt;Part 5: All 9 Departments (full: Resources, Actions, Upgrades, full Bribe Deck, Interference)&lt;/li&gt;
+&lt;li&gt;Part 6: Elections&lt;/li&gt;
+&lt;li&gt;Part 7: Victory Conditions&lt;/li&gt;
+&lt;li&gt;Part 8: Crisis Deck (40 cards)&lt;/li&gt;
+&lt;li&gt;Part 9: 2-Player Scaling&lt;/li&gt;
+&lt;li&gt;Part 10: Solo Mode&lt;/li&gt;
+&lt;li&gt;Part 11: Full Worked Round&lt;/li&gt;
+&lt;li&gt;Part 12: Component List &amp;amp; Build Priority&lt;/li&gt;
+&lt;li&gt;Part 13: Quick-Reference Summary Table&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr /&gt;
+&lt;h1 id="part-1-core-loop-national-stats"&gt;PART 1 — CORE LOOP &amp;amp; NATIONAL STATS&lt;/h1&gt;
+&lt;h2 id="11-the-core-loop"&gt;1.1 The Core Loop&lt;/h2&gt;
+&lt;p&gt;Every round runs 4 phases in order:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Life Phase&lt;/strong&gt; — population acts automatically (lookup table, no decisions)&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Department Phase&lt;/strong&gt; — each player spends Action Points (AP)&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Resolution Phase&lt;/strong&gt; — stat changes applied, one Crisis card drawn&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Election Check&lt;/strong&gt; — rounds 4, 8, 12 only&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;A full game = &lt;strong&gt;12 rounds&lt;/strong&gt; ("one term"), target 90–120 min at 4 players.&lt;/p&gt;
+&lt;h2 id="12-national-stats-0100-unless-noted"&gt;1.2 National Stats (0–100 unless noted)&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Stat&lt;/th&gt;
+&lt;th&gt;Start&lt;/th&gt;
+&lt;th&gt;Notes&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Trust&lt;/td&gt;
+&lt;td&gt;55&lt;/td&gt;
+&lt;td&gt;Drives elections, tax compliance, protest risk&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Corruption&lt;/td&gt;
+&lt;td&gt;40&lt;/td&gt;
+&lt;td&gt;Higher = more bribe pressure, worse crisis outcomes&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Crime&lt;/td&gt;
+&lt;td&gt;35&lt;/td&gt;
+&lt;td&gt;Police-driven, affects Trust and Economy&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Health&lt;/td&gt;
+&lt;td&gt;50&lt;/td&gt;
+&lt;td&gt;Health Minister-driven&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Education&lt;/td&gt;
+&lt;td&gt;45&lt;/td&gt;
+&lt;td&gt;Education Minister-driven&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Infrastructure&lt;/td&gt;
+&lt;td&gt;50&lt;/td&gt;
+&lt;td&gt;Transport + Municipal-driven&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Pollution&lt;/td&gt;
+&lt;td&gt;45&lt;/td&gt;
+&lt;td&gt;Municipal + Industry-driven&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Employment&lt;/td&gt;
+&lt;td&gt;60&lt;/td&gt;
+&lt;td&gt;Finance + Education-driven&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Inflation&lt;/td&gt;
+&lt;td&gt;6%&lt;/td&gt;
+&lt;td&gt;Finance-driven, 0–20% track&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;National Debt&lt;/td&gt;
+&lt;td&gt;₹200 GC&lt;/td&gt;
+&lt;td&gt;Finance-driven&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Treasury&lt;/td&gt;
+&lt;td&gt;₹150 GC&lt;/td&gt;
+&lt;td&gt;Shared budget&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;Rule:&lt;/strong&gt; every card that changes a stat must touch a second stat too. No isolated single-stat cards anywhere in the game — this is what makes departments feel entangled instead of running nine parallel solitaire games.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h1 id="part-2-population-system"&gt;PART 2 — POPULATION SYSTEM&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;60 Population Cubes&lt;/strong&gt; (4-player baseline; ±15 per player added/removed) in &lt;strong&gt;5 pools&lt;/strong&gt;: Working / Student / Unemployed / Sick / Retired. No individual tracking — pools move as blocks each Life Phase via this lookup table:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Trigger&lt;/th&gt;
+&lt;th&gt;Effect&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Education &amp;lt; 40&lt;/td&gt;
+&lt;td&gt;1 cube Student → Unemployed (instead of → Working)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Health &amp;lt; 40&lt;/td&gt;
+&lt;td&gt;2 cubes Working → Sick&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Health &amp;lt; 25&lt;/td&gt;
+&lt;td&gt;1 Sick cube removed permanently (death); Trust −3&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Employment stat &amp;lt; 50&lt;/td&gt;
+&lt;td&gt;1 cube Working → Unemployed&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Crime &amp;gt; 60&lt;/td&gt;
+&lt;td&gt;1 cube Working → Sick (injury)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Infrastructure &amp;gt; 70 AND Employment &amp;gt; 60&lt;/td&gt;
+&lt;td&gt;1 cube Unemployed → Working&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Sick and Unemployed cubes don't pay tax. &lt;strong&gt;Tax income = (Working cubes × ₹2 GC) − (Inflation% × Treasury)&lt;/strong&gt;, paid into Treasury each Life Phase. This one formula is what makes Health/Education/Employment matter to Finance without a second bookkeeping system.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h1 id="part-3-action-points"&gt;PART 3 — ACTION POINTS&lt;/h1&gt;
+&lt;p&gt;Each department gets &lt;strong&gt;base 6 AP/round&lt;/strong&gt;, modified by:
+- +1 if that department's Reputation ≥ 70
+- −1 if Reputation ≤ 20
+- +1 if past Upgrade Tier 2&lt;/p&gt;
+&lt;p&gt;AP is spent on Standard Actions, Upgrades, or Interference. Unspent AP does not carry over.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h1 id="part-4-the-interference-system"&gt;PART 4 — THE INTERFERENCE SYSTEM&lt;/h1&gt;
+&lt;p&gt;&lt;em&gt;(The sabotage layer — how "dump sick people on Health" becomes a real, costed strategy instead of a free gotcha.)&lt;/em&gt;&lt;/p&gt;
+&lt;h2 id="41-capacity-the-lever-sabotage-pulls"&gt;4.1 Capacity — the lever sabotage pulls&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Department&lt;/th&gt;
+&lt;th&gt;Capacity Resource&lt;/th&gt;
+&lt;th&gt;Base Capacity&lt;/th&gt;
+&lt;th&gt;Overflow Penalty&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Health&lt;/td&gt;
+&lt;td&gt;Hospital Beds&lt;/td&gt;
+&lt;td&gt;8 Sick cubes/round&lt;/td&gt;
+&lt;td&gt;Each cube over: Health −1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Judiciary&lt;/td&gt;
+&lt;td&gt;Court Slots&lt;/td&gt;
+&lt;td&gt;6 cases/round&lt;/td&gt;
+&lt;td&gt;Each case over: Crime +1 next round&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Municipal&lt;/td&gt;
+&lt;td&gt;Waste Capacity&lt;/td&gt;
+&lt;td&gt;10 units/round&lt;/td&gt;
+&lt;td&gt;Each unit over: Pollution +1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Capacity is raised legitimately via Upgrade Tree tiers, or spiked adversarially via Interference — same number, two directions, which is what makes it feel designed rather than bolted on.&lt;/p&gt;
+&lt;h2 id="42-interference-actions-available-to-every-department"&gt;4.2 Interference Actions (available to every department)&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Open Interference — 3 AP, no GC.&lt;/strong&gt; Announced immediately (e.g. &lt;em&gt;Redirect Sick Cubes&lt;/em&gt;: move up to 3 cubes onto a target's Capacity check this round). Your Public Reputation −5 immediately — everyone watched.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Covert Interference — 4 AP + 10 GC&lt;/strong&gt; (paid to Media as a "cover story"). Not announced. A face-down &lt;strong&gt;Hidden Interference token&lt;/strong&gt; goes under your board, flippable by anyone's Investigate action (2 AP), same as a Corruption token. If flipped: Public Reputation −20 (worse than doing it openly), Corruption (national) +5.&lt;/p&gt;
+&lt;h2 id="43-countermeasures-free-once-per-round-available-off-turn"&gt;4.3 Countermeasures (free, once per round, available off-turn)&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Absorb&lt;/strong&gt; — halve the overflow (round up), no side effect.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Deflect&lt;/strong&gt; — halve the overflow, but Trust −2 nationally.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Retaliate marker&lt;/strong&gt; — take full overflow, gain a &lt;strong&gt;Grievance token&lt;/strong&gt;: your next Interference against that specific player costs 1 less AP.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="44-worked-example"&gt;4.4 Worked Example&lt;/h2&gt;
+&lt;p&gt;Municipal (losing Reputation ground to Health) spends 4 AP + 10 GC on Covert Interference: dumps 4 cubes Working → Sick, pushing Sick to 11 (3 over Health's Capacity of 8). Health, not yet knowing the source, reacts with Absorb: Health −2. Two rounds later Police spends 2 AP on Investigate and flips the token — Municipal's Reputation −20, Corruption +5, and it becomes table knowledge right before the Round 8 election. Real cost (10 GC, 4 AP, exposure risk), real payoff (Health took a hit right before votes) — that asymmetry is the whole point.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h1 id="part-5-all-9-departments-full"&gt;PART 5 — ALL 9 DEPARTMENTS (FULL)&lt;/h1&gt;
+&lt;p&gt;Every department: Resources → Standard Actions → Upgrade Tree → &lt;strong&gt;full Bribe Deck (3–4 cards)&lt;/strong&gt; → Signature Interference.&lt;/p&gt;
+&lt;h2 id="51-police-commissioner"&gt;5.1 Police Commissioner&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Resources:&lt;/strong&gt; Officers (10 start, ₹5 GC/round upkeep each) · Precincts (2 start, 5 Officers each)&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Standard Actions&lt;/strong&gt;
+| Action | AP | Effect |
+|---|---|---|
+| Patrol | 1 | Crime −2 in one district |
+| Investigate | 2 | Reveal one Hidden token (Corruption or Interference), anywhere |
+| Raid | 3 | Remove 1 Crime Syndicate token; Crime −5; Reputation(Criminal) −10 |
+| Hire Officers | 2 | +3 Officers (₹15 GC) |
+| Anti-Corruption Campaign | 4 | Corruption (national) −5; Reputation(Public) +10; ₹20 GC |&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Upgrade Tree:&lt;/strong&gt; Digitized FIR (3AP/₹20, Investigate → 1 AP) → Forensics Lab (3AP/₹30, Raid also seizes ₹10 GC to Treasury) → CCTV Network (4AP/₹40, crisis-driven Crime −50%) → Predictive Policing (4AP/₹50, preview top Crisis card) → Smart City Policing (5AP/₹60, +1 base AP; Patrol hits 2 districts).&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Bribe Deck (4 cards):&lt;/strong&gt;
+| Card | Offer | Accept | Reject |
+|---|---|---|---|
+| Precinct Expansion | Contractor offers ₹15 GC to ignore an illegal precinct expansion | +15 GC personal wealth, Corruption +3, becomes Hidden token | Reputation(Public) +5 |
+| Protection Racket | A gang offers ₹18 GC/round (ongoing) for reduced Patrol in their district | +18 GC this round (repeatable), Crime +3/round it continues, Corruption +2/round | Nothing gained, Crime unaffected |
+| Evidence Disposal | Anonymous offer of ₹14 GC to lose evidence in a minor case | +14 GC, that case can never contribute to a future Judiciary Anti-Corruption Tribunal reveal, Corruption +4 | Nothing gained |
+| VIP Escort Skim | A politician offers ₹10 GC to pad an official security detail budget | +10 GC, Officers upkeep +₹2/round for 3 rounds (padded budget bleeds resources), Corruption +2 | Reputation(Political) +5 |&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Signature Interference — "Selective Enforcement":&lt;/strong&gt; 3 AP, targets any department's Reputation directly (not Capacity) — publicly announce heightened scrutiny of a rival's district. Target's Reputation −8 this round; your own Reputation(Criminal) +5 (criminals notice you're distracted elsewhere). Open only — Police interference is inherently visible.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h2 id="52-health-minister"&gt;5.2 Health Minister&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Resources:&lt;/strong&gt; Hospital Beds (Capacity, 8/round) · Doctors (6 start, ₹4 GC/round upkeep each)&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Standard Actions&lt;/strong&gt;
+| Action | AP | Effect |
+|---|---|---|
+| Treat Patients | 1 | Clear up to 3 Sick cubes (within Capacity) |
+| Vaccination Drive | 2 | Prevents next Health-related crisis card |
+| Hire Doctors | 2 | +2 Doctors (₹12 GC) |
+| Build Clinic | 3 | +3 Capacity permanently (₹25 GC) |&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Upgrade Tree:&lt;/strong&gt; District Hospital (3AP/₹20) → Medical College (1 free Doctor/round) → Subsidized Medicine (Treat Patients → 4 cubes) → AI Diagnostics (Capacity +4 one-time) → Universal Healthcare (+1 base AP; overflow penalty halved).&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Bribe Deck (4 cards):&lt;/strong&gt;
+| Card | Offer | Accept | Reject |
+|---|---|---|---|
+| Doctor Diversion | Private chain offers ₹18 GC to divert Doctors to their wards, 2 rounds | +18 GC, Capacity −2 for 2 rounds, Corruption +3 | Reputation(Public) +5 |
+| Fake Insurance Claims | Insurer offers ₹16 GC to co-sign inflated claims | +16 GC, Treasury −10 GC (public insurance scheme absorbs the loss), Corruption +3 | Nothing gained |
+| Equipment Kickback | Supplier offers ₹12 GC for a no-bid equipment contract | +12 GC, next Build Clinic costs +5 GC extra (substandard equipment needs replacing), Corruption +2 | Reputation(Public) +4 |
+| Trial Shortcuts | Pharma company offers ₹20 GC to skip a safety review stage | +20 GC, Corruption +5, and this specifically raises the odds of Crisis #11 (Vaccine Shortage) or #29 (Doctor Emigration) triggering next draw (flag it face-up as a marker) | Nothing gained |&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Signature Interference — "Health Advisory":&lt;/strong&gt; 3 AP, targets Food Commissioner. Publicly blame a foodborne illness spike — Food's Reputation −10 this round, but if Food's Food Safety stat is above 60 when this is used, it backfires: Health's own Reputation −15 instead (false accusation exposed).&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h2 id="53-education-minister"&gt;5.3 Education Minister&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Resources:&lt;/strong&gt; Schools (5 start) · Teachers (8 start, ₹3 GC/round upkeep each)&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Standard Actions&lt;/strong&gt;
+| Action | AP | Effect |
+|---|---|---|
+| Run Classes | 1 | +2 Education this round |
+| Teacher Training | 2 | Education gains become permanent |
+| Scholarship Program | 3 | 1 cube Unemployed → Student (₹15 GC) |
+| Build School | 3 | +1 School, Education cap +5 (₹25 GC) |&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Upgrade Tree:&lt;/strong&gt; Smart Classrooms (3AP/₹20, Run Classes → +3) → Teacher Certification (Teachers immune to Health-crisis loss) → Scholarship Fund (Scholarship Program → 2 AP) → Research University (1 "Skilled Worker" token/round, cashable by Finance for +₹5 GC) → Free Higher Education (+1 base AP; Employment +5 one-time).&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Bribe Deck (4 cards):&lt;/strong&gt;
+| Card | Offer | Accept | Reject |
+|---|---|---|---|
+| Textbook Contract | Publisher offers ₹12 GC for an exclusive overpriced contract | +12 GC, Education −3, Corruption +2 | Nothing gained |
+| Fake Degree Mill | A private college offers ₹17 GC to quietly accredit a diploma mill | +17 GC, Corruption +4, and that college's graduates don't count toward the Research University's Skilled Worker output (hollow growth) | Reputation(Public) +5 |
+| Exam Paper Leak | A tutoring network offers ₹14 GC to leak an exam in advance | +14 GC, Education −5 next round (results become meaningless, undermining the stat), Corruption +3 | Nothing gained |
+| Enrollment Padding | A district officer offers ₹10 GC to inflate enrollment numbers for higher federal funding | +10 GC, Treasury +5 GC also (the padded funding briefly arrives before scrutiny), but a Judiciary Anti-Corruption Tribunal or Police Investigate that later targets Education gets a free extra flip attempt (this bribe is unusually easy to get caught) | Nothing gained |&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Signature Interference — "Brain Drain Leak":&lt;/strong&gt; 4 AP + 8 GC, covert only. Targets any department with an Upgrade Tree Tier 3+: their next Upgrade attempt costs +2 AP, once.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h2 id="54-transport-minister"&gt;5.4 Transport Minister&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Resources:&lt;/strong&gt; Road Network (Infrastructure-linked) · Rail Lines (3 start)&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Standard Actions&lt;/strong&gt;
+| Action | AP | Effect |
+|---|---|---|
+| Pothole Repair | 1 | Infrastructure +2 |
+| Traffic Management | 2 | Crime −2 |
+| Expand Rail | 3 | +1 Rail Line, Employment +3 (₹20 GC) |
+| Fuel Subsidy | 2 | Inflation −1 this round (₹15 GC) |&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Upgrade Tree:&lt;/strong&gt; Highway Expansion (3AP/₹20) → Metro System (Transport's Infrastructure gains +50%) → EV Incentives (Pollution −5 one-time, then −1/round) → Smart Traffic AI (Traffic Management → 1 AP) → National Rail Grid (+1 base AP; Employment +5 one-time).&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Bribe Deck (4 cards):&lt;/strong&gt;
+| Card | Offer | Accept | Reject |
+|---|---|---|---|
+| Substandard Materials | Contractor offers ₹20 GC to approve cheap road materials | +20 GC, next 2 Infrastructure gains from Transport halved, Corruption +4 | Reputation(Public) +8 |
+| License Fast-Track | A transport company offers ₹9 GC to skip vehicle safety inspections for their fleet | +9 GC, Crime +2 (accident-adjacent incidents get filed as crime reports), Corruption +2 | Nothing gained |
+| Toll Booth Skimming | A toll operator offers ₹13 GC/round (ongoing) to underreport toll revenue | +13 GC this round (repeatable), Treasury −13 GC/round it continues, Corruption +3/round | Nothing gained, Treasury unaffected |
+| Fleet Contract Kickback | A bus manufacturer offers ₹16 GC for an exclusive no-bid fleet contract | +16 GC, Rail Line expansion costs +₹5 GC for the rest of the game (locked into inferior supplier), Corruption +3 | Reputation(Public) +5 |&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Signature Interference — "Route Diversion":&lt;/strong&gt; 3 AP, targets Municipal. Reroute construction traffic through a rival's district: Municipal's Waste Capacity −3 this round. Open only.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h2 id="55-municipal-commissioner"&gt;5.5 Municipal Commissioner&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Resources:&lt;/strong&gt; Waste Capacity (10/round) · Water Supply (linked to Health overflow)&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Standard Actions&lt;/strong&gt;
+| Action | AP | Effect |
+|---|---|---|
+| Waste Collection | 1 | Pollution −2 |
+| Water Treatment | 2 | Prevents Health overflow from Water-linked crises this round |
+| Park Development | 2 | Trust +3 (₹10 GC) |
+| Illegal Construction Crackdown | 3 | Corruption −3 (national), Crime −2 |&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Upgrade Tree:&lt;/strong&gt; Drainage Overhaul (3AP/₹15, Waste Capacity +3) → Recycling Program (Waste Collection's Pollution effect doubled) → Smart Water Grid (Water Treatment → 1 AP) → Green Belt Initiative (Pollution −10 one-time) → Zero Waste City (+1 base AP; Waste Capacity +5).&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Bribe Deck (4 cards):&lt;/strong&gt;
+| Card | Offer | Accept | Reject |
+|---|---|---|---|
+| Flood Zone High-Rise | Builder offers ₹14 GC to overlook an illegal high-rise in a flood zone | +14 GC, Infrastructure −4 on the next flood-type crisis, Corruption +3 | Nothing gained |
+| Land Zoning Change | A developer offers ₹19 GC to rezone protected land | +19 GC, Pollution +6 permanent (lost green buffer), Corruption +4 | Reputation(Public) +6 |
+| Garbage Contract Kickback | A waste-management firm offers ₹11 GC for an inflated collection contract | +11 GC, Waste Capacity −2 permanent (worse trucks), Corruption +2 | Nothing gained |
+| Street Vendor Extortion | Local inspectors offer to split ₹8 GC/round in informal vendor "fees" with you | +8 GC/round (repeatable), Trust −1/round it continues, Corruption +1/round | Nothing gained, Trust unaffected |&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Signature Interference — "Dump Overflow":&lt;/strong&gt; 4 AP + 10 GC covert, or 3 AP open. Targets Health's Capacity: move up to 4 cubes Working → Sick this round.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h2 id="56-food-commissioner"&gt;5.6 Food Commissioner&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Resources:&lt;/strong&gt; Food Safety (0–100, local stat) · Market Stalls (6 start)&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Standard Actions&lt;/strong&gt;
+| Action | AP | Effect |
+|---|---|---|
+| Market Inspection | 1 | Food Safety +5 |
+| Subsidize Staples | 2 | Trust +2, Inflation −1 (₹10 GC) |
+| Farmer Support | 2 | Prevents next Farmer Protest crisis card |
+| Cold Storage Expansion | 3 | Food Safety no longer decays round-to-round (₹20 GC) |&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Upgrade Tree:&lt;/strong&gt; Quality Certification (3AP/₹15) → Farmer Cooperatives (Employment +3 passive) → Supply Chain Digitization (Market Inspection → 1 AP, +7) → Public Distribution Network (Food's Trust gains doubled) → National Food Security (+1 base AP; Food Safety floor 40, can't drop below).&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Bribe Deck (4 cards):&lt;/strong&gt;
+| Card | Offer | Accept | Reject |
+|---|---|---|---|
+| Expired Stock | Distributor offers ₹10 GC to pass expired stock as fresh | +10 GC, Food Safety −15, Corruption +3, raises odds of a Health-linked crisis next draw | Nothing gained |
+| Subsidy Diversion | An official offers ₹15 GC to redirect staple subsidies to a private buyer | +15 GC, Treasury −8 GC, Trust −4, Corruption +3 | Nothing gained |
+| Inspection Skip | A restaurant chain offers ₹9 GC/round (ongoing) to skip their inspections | +9 GC/round (repeatable), Food Safety −3/round it continues, Corruption +2/round | Nothing gained, Food Safety unaffected |
+| Import Quota Favor | An importer offers ₹17 GC for a favorable quota allocation | +17 GC, Inflation +1 (local producers undercut), Corruption +3 | Reputation(Public) +5 |&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Signature Interference — "Supply Squeeze":&lt;/strong&gt; 3 AP, targets Finance. Route subsidized staples away from a district right before tax assessment: Finance's next Tax Phase income −15 GC, Trust −3 for you. Open only.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h2 id="57-finance-minister"&gt;5.7 Finance Minister&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Resources:&lt;/strong&gt; Treasury (shared) · Tax Rate (0–20%, ±2%/round)&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Standard Actions&lt;/strong&gt;
+| Action | AP | Effect |
+|---|---|---|
+| Adjust Tax Rate | 1 | Change rate ±2%, affects next round's income |
+| Audit | 2 | Reveal one department's Personal Wealth Track total (number only, doesn't flip tokens) |
+| Stimulus Package | 3 | Employment +5, Treasury −30 GC |
+| Debt Repayment | 2 | National Debt −20 GC (requires Treasury ≥ 20) |&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Upgrade Tree:&lt;/strong&gt; GST Reform (3AP/₹25, tax collection +10% flat) → Digital Banking (Audit → 1 AP) → Foreign Investment (Treasury +50 GC one-time) → Inflation Controls (Inflation changes halved both directions) → Sovereign Wealth Fund (+1 base AP; Treasury +5 GC/round passive).&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Bribe Deck (4 cards):&lt;/strong&gt;
+| Card | Offer | Accept | Reject |
+|---|---|---|---|
+| Tax Exemption | Corporation offers ₹25 GC for a quiet exemption | +25 GC, Treasury −15 GC that round, Corruption +4 | Reputation(Public) +6 |
+| Loan Approval Favor | A businessman offers ₹15 GC to approve a loan against policy | +15 GC, National Debt +10 GC (bad loan risk absorbed publicly), Corruption +3 | Nothing gained |
+| Asset Undervaluation | A buyer offers ₹18 GC to undervalue a public asset before its sale | +18 GC, Treasury −20 GC (the difference is the actual loss), Corruption +4 | Nothing gained |
+| Audit Suppression | Another department's player offers ₹12 GC to bury a negative Audit result about them | +12 GC, that department's Audit result cannot be revealed this game, Corruption +3, becomes Hidden token | Nothing gained |&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Signature Interference — "Frozen Funds":&lt;/strong&gt; 4 AP, targets any department directly. Blocks their Treasury-cost actions for one round. No covert version — inherently public. Trust −4 for you.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h2 id="58-media-head"&gt;5.8 Media Head&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Resources:&lt;/strong&gt; Story Credits (4/round, refresh each round, don't carry over)&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Standard Actions&lt;/strong&gt;
+| Action | Cost | Effect |
+|---|---|---|
+| Expose | 1 Credit | Force one Hidden token to flip, anywhere |
+| Cover Story | 1 Credit + ₹10 GC (paid to Media by requester) | Enables another department's Covert Interference (§4.2) |
+| Propaganda Push | 2 Credits | Trust +5 nationally, hidden Corruption +2 (doesn't show yet) |
+| Panic Headline | 2 Credits | Target's Reputation −10, your own Reputation −5 |&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Upgrade Tree:&lt;/strong&gt; Investigative Desk (3AP/₹20, Expose → 0 Credits) → Digital Platform (+2 Credits/round) → Fact-Check Bureau (Propaganda Push no longer generates hidden Corruption) → National Broadcaster (Panic Headline costs 0 Reputation to you) → State Media Control (+1 base AP; once/game, delay an Election Check one round).&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Bribe Deck (4 cards):&lt;/strong&gt;
+| Card | Offer | Accept | Reject |
+|---|---|---|---|
+| Buried Story | Politician offers ₹15 GC to kill a scandal about themselves | +15 GC, that department's next Hidden token immune to Expose for 2 rounds, Corruption +3 | Story runs: target's Reputation −10, yours +5 |
+| Sponsored Segment | Corporation offers ₹12 GC for favorable coverage disguised as news | +12 GC, Trust +3 short-term, becomes Hidden token — if later flipped, Trust −8 (retroactive) | Nothing gained |
+| Leak for Hire | A rival department offers ₹20 GC to leak a competitor's Hidden token early | +20 GC, immediately flip one named token of your choice, Corruption +2 | Nothing happens |
+| Election Eve Silence | Pre-election round only: PM offers ₹25 GC to run zero Panic Headlines this round | +25 GC, guaranteed calm this round, Corruption +6 | Trust +10, PM's Reputation toward you +5 |&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Signature Interference:&lt;/strong&gt; none separate — Media's whole kit (Cover Story, Panic Headline, Expose) &lt;em&gt;is&lt;/em&gt; the interference layer other departments plug into. This is intentional: it's the department built around the system everyone else uses.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h2 id="59-judiciary"&gt;5.9 Judiciary&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Resources:&lt;/strong&gt; Court Slots (Capacity, 6/round) · Judges (4 start, ₹5 GC/round upkeep each)&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Standard Actions&lt;/strong&gt;
+| Action | AP | Effect |
+|---|---|---|
+| Hear Case | 1 | Clear 2 backlogged cases, Crime −1 |
+| Fast-Track Ruling | 2 | Clear 4 cases, Trust −2 |
+| Appoint Judges | 2 | +2 Judges (₹15 GC) |
+| Anti-Corruption Tribunal | 4 | Force-reveal ALL Hidden Corruption tokens at the table (Interference tokens unaffected — different jurisdiction) |&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Upgrade Tree:&lt;/strong&gt; Case Digitization (3AP/₹20, Hear Case → 3 cases) → Fast Courts (Court Slots +3) → Judicial Independence (immune to 1 Interference/game, free) → Legal Aid Network (Fast-Track no longer costs Trust) → Supreme Oversight (+1 base AP; Tribunal → 3 AP).&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Bribe Deck (4 cards):&lt;/strong&gt;
+| Card | Offer | Accept | Reject |
+|---|---|---|---|
+| Delay Motion | Family offers ₹16 GC to delay a case indefinitely | +16 GC, permanent backlog entry (+1 Crime/round it sits), Corruption +5 | Nothing gained |
+| Lenient Sentencing | Corporation offers ₹18 GC for a favorable ruling | +18 GC, Treasury −10 GC (settlement shortfall), Corruption +4 | Reputation(Public) +6 |
+| Judge Appointment Favor | PM offers a free Judge appointment in exchange for a ruling against a rival | +1 Judge (free, ~₹15 GC value), target's Reputation −10, Corruption +3 | Nothing gained, PM's Reputation toward you −5 |
+| Evidence Tampering | Anonymous offer of ₹22 GC to permanently destroy one Hidden token | +22 GC, destroys one Hidden token of your choice (yours or anyone's) — unflippable forever, Corruption +7 (highest single value in the game) | Nothing gained |&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Signature Interference — "Injunction":&lt;/strong&gt; 3 AP, can be used off-turn/reactively to block one department's Upgrade attempt this round, forcing a re-attempt next round at full cost. Doesn't touch stats — it costs &lt;em&gt;tempo&lt;/em&gt;.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h2 id="510-prime-minister"&gt;5.10 Prime Minister&lt;/h2&gt;
+&lt;p&gt;Not first-among-equals: real power, unique constraints. Everything the PM does is &lt;strong&gt;always open&lt;/strong&gt; (never covert), and the PM's Reputation swings &lt;strong&gt;twice as hard&lt;/strong&gt;, both directions.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Resources:&lt;/strong&gt; none personal — spends Treasury GC and grants AP directly.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Standard Actions&lt;/strong&gt;
+| Action | AP | Effect |
+|---|---|---|
+| Allocate Funding | 2 | Move 15 GC from Treasury to any department, bypassing their normal income |
+| Declare Emergency | 3 | All departments +2 AP this round; Trust −5 |
+| Privatize Sector | 4 | Pick one department: Capacity/output doubles for 3 rounds, but their Bribe Deck values are +50% for those 3 rounds |
+| Call Snap Election | 5 | Force an Election Check immediately, off-schedule |&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Upgrade Tree:&lt;/strong&gt; none personal — the PM instead &lt;strong&gt;sponsors&lt;/strong&gt; any department's Tier 4–5 upgrade by paying 50% of its GC cost. Keeps PM power tied to enabling others rather than stacking a personal engine (a PM with its own tree on top of funding power would be strictly dominant).&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Bribe Deck (3 cards — fewer, heavier):&lt;/strong&gt;
+| Card | Offer | Accept | Reject |
+|---|---|---|---|
+| Campaign Support | Consortium offers +10 to the Approval formula at next Election Check for a Privatize Sector favor | Guaranteed +10 Approval, Corruption +6, publicly known within 2 rounds via Media | Trust +10 |
+| Emergency Powers Grab | Offer to permanently reduce Declare Emergency to 1 AP in exchange for shielding one department's Hidden tokens from ever being flipped this term | Declare Emergency → 1 AP permanently, one chosen department's tokens unflippable for the term, Corruption +8 (highest in the game) | Trust +8, that department's Reputation toward PM +10 |
+| Foreign Backing | Foreign entity offers Treasury +40 GC for a permanent favorable Privatize Sector on a strategic department | +40 GC immediately, that department flagged "Foreign-Linked" — its Reform-path Reputation gains halved for the rest of the game, Corruption +5 | Nothing gained |&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Signature Interference:&lt;/strong&gt; none — the PM's Standard Actions (especially Privatize Sector and Frozen-Funds-adjacent Allocate Funding) already function as high-level interference. A separate action would be redundant with power the PM already has.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h1 id="part-6-elections"&gt;PART 6 — ELECTIONS&lt;/h1&gt;
+&lt;p&gt;At rounds 4, 8, 12:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Approval = (Trust × 0.4) + (Employment × 0.25) + ((100 − Crime) × 0.2) + ((100 − Inflation×5) × 0.15)&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Approval ≥ 60: incumbents keep seats, +1 AP bonus next term, all departments.&lt;/li&gt;
+&lt;li&gt;Approval 40–59: department with lowest individual Reputation is voted out; that player picks a new, unclaimed department.&lt;/li&gt;
+&lt;li&gt;Approval &amp;lt; 40: full reshuffle; Corruption +10; Treasury −20%.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr /&gt;
+&lt;h1 id="part-7-victory-conditions"&gt;PART 7 — VICTORY CONDITIONS&lt;/h1&gt;
+&lt;p&gt;Checked at end of Round 12 (or immediately if Oligarch/Syndicate trigger early):&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Reform Victory (shared):&lt;/strong&gt; Corruption ≤ 15, Trust ≥ 85, Education ≥ 80, Health ≥ 80, Crime ≤ 20, Treasury ≥ 0.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Oligarch Victory (solo):&lt;/strong&gt; Personal Wealth Track ≥ 150 GC AND controlled departments' combined Reputation influence exceeds current Trust.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Criminal Syndicate ("everyone loses"):&lt;/strong&gt; Corruption hits 95 → Crime auto-locks 90+, game ends immediately.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Tiebreaker:&lt;/strong&gt; if none trigger by Round 12, highest Trust wins.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h1 id="part-8-crisis-deck-40-cards"&gt;PART 8 — CRISIS DECK (40 CARDS)&lt;/h1&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;#&lt;/th&gt;
+&lt;th&gt;Card&lt;/th&gt;
+&lt;th&gt;Trigger&lt;/th&gt;
+&lt;th&gt;Effect&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;Monsoon Floods&lt;/td&gt;
+&lt;td&gt;Infrastructure &amp;lt; 50&lt;/td&gt;
+&lt;td&gt;Infrastructure −10, Health −5, all departments −1 AP&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;Farmer Protest&lt;/td&gt;
+&lt;td&gt;Food Reputation &amp;lt; 30&lt;/td&gt;
+&lt;td&gt;Crime +5, Trust −5 unless Food spends 3 AP to negotiate&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;3&lt;/td&gt;
+&lt;td&gt;Fake Medicine Scandal&lt;/td&gt;
+&lt;td&gt;Health &amp;lt; 40&lt;/td&gt;
+&lt;td&gt;Health −8 unless Health reveals a Hidden token to redirect blame&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;4&lt;/td&gt;
+&lt;td&gt;Power Shortage&lt;/td&gt;
+&lt;td&gt;Infrastructure &amp;lt; 40&lt;/td&gt;
+&lt;td&gt;Employment −5, Pollution +5&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;5&lt;/td&gt;
+&lt;td&gt;Cyber Attack&lt;/td&gt;
+&lt;td&gt;Police Reputation(Criminal) &amp;lt; 20&lt;/td&gt;
+&lt;td&gt;Treasury −20 GC unless CCTV Network owned&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;6&lt;/td&gt;
+&lt;td&gt;Heatwave&lt;/td&gt;
+&lt;td&gt;Health &amp;lt; 45&lt;/td&gt;
+&lt;td&gt;3 cubes Working → Sick this round&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;7&lt;/td&gt;
+&lt;td&gt;Festival Rush&lt;/td&gt;
+&lt;td&gt;—&lt;/td&gt;
+&lt;td&gt;Employment +5, Crime +3, Trust +2&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;8&lt;/td&gt;
+&lt;td&gt;Air Pollution Emergency&lt;/td&gt;
+&lt;td&gt;Pollution &amp;gt; 65&lt;/td&gt;
+&lt;td&gt;Health −10, Education −5&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;9&lt;/td&gt;
+&lt;td&gt;Rail Accident&lt;/td&gt;
+&lt;td&gt;Transport Reputation &amp;lt; 30&lt;/td&gt;
+&lt;td&gt;Infrastructure −8, Trust −8&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;10&lt;/td&gt;
+&lt;td&gt;Fuel Crisis&lt;/td&gt;
+&lt;td&gt;Inflation &amp;gt; 10%&lt;/td&gt;
+&lt;td&gt;Inflation +2, Employment −5&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;11&lt;/td&gt;
+&lt;td&gt;Vaccine Shortage&lt;/td&gt;
+&lt;td&gt;Health &amp;lt; 50 AND Treasury &amp;lt; 50&lt;/td&gt;
+&lt;td&gt;Health −8, Trust −5 unless Vaccination Drive active&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;12&lt;/td&gt;
+&lt;td&gt;Teacher Strike&lt;/td&gt;
+&lt;td&gt;Education Reputation &amp;lt; 30&lt;/td&gt;
+&lt;td&gt;Education −6, Employment −2&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;13&lt;/td&gt;
+&lt;td&gt;Bridge Collapse&lt;/td&gt;
+&lt;td&gt;Infrastructure &amp;lt; 35&lt;/td&gt;
+&lt;td&gt;Infrastructure −15, +2 Sick cubes, Trust −10&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;14&lt;/td&gt;
+&lt;td&gt;Election Fraud Allegation&lt;/td&gt;
+&lt;td&gt;Corruption &amp;gt; 60, election round only&lt;/td&gt;
+&lt;td&gt;Approval result −10 flat&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;15&lt;/td&gt;
+&lt;td&gt;Currency Devaluation&lt;/td&gt;
+&lt;td&gt;Inflation &amp;gt; 12%&lt;/td&gt;
+&lt;td&gt;Treasury −10%, Employment −5&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;16&lt;/td&gt;
+&lt;td&gt;Slum Fire&lt;/td&gt;
+&lt;td&gt;Pollution &amp;gt; 60 AND Infrastructure &amp;lt; 40&lt;/td&gt;
+&lt;td&gt;3 cubes Working → Sick, Municipal Reputation −10&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;17&lt;/td&gt;
+&lt;td&gt;Judicial Backlog Exposed&lt;/td&gt;
+&lt;td&gt;Court Slots overflow 2+ rounds running&lt;/td&gt;
+&lt;td&gt;Crime +8, Trust −8&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;18&lt;/td&gt;
+&lt;td&gt;Viral Misinformation&lt;/td&gt;
+&lt;td&gt;Media Reputation &amp;lt; 30&lt;/td&gt;
+&lt;td&gt;Trust −10, one random department Reputation −5&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;19&lt;/td&gt;
+&lt;td&gt;Border Skirmish&lt;/td&gt;
+&lt;td&gt;random draw&lt;/td&gt;
+&lt;td&gt;All departments −1 AP, PM +2 AP&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;20&lt;/td&gt;
+&lt;td&gt;Tech Startup Boom&lt;/td&gt;
+&lt;td&gt;Education &amp;gt; 65 AND Employment &amp;gt; 65&lt;/td&gt;
+&lt;td&gt;Treasury +30 GC, Inflation +1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;21&lt;/td&gt;
+&lt;td&gt;Water Contamination&lt;/td&gt;
+&lt;td&gt;Water Treatment unused 2+ rounds&lt;/td&gt;
+&lt;td&gt;4 cubes Working → Sick, direct Health overflow trigger&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;22&lt;/td&gt;
+&lt;td&gt;Whistleblower&lt;/td&gt;
+&lt;td&gt;any Hidden token exists&lt;/td&gt;
+&lt;td&gt;Free Investigate granted (crisis-drawer's choice of recipient)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;23&lt;/td&gt;
+&lt;td&gt;Festival Stampede&lt;/td&gt;
+&lt;td&gt;Crime &amp;gt; 50 AND Infrastructure &amp;lt; 50&lt;/td&gt;
+&lt;td&gt;Trust −8, 1 cube removed (death)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;24&lt;/td&gt;
+&lt;td&gt;Foreign Aid Offer&lt;/td&gt;
+&lt;td&gt;Trust &amp;gt; 70&lt;/td&gt;
+&lt;td&gt;Treasury +25 GC, no strings&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;25&lt;/td&gt;
+&lt;td&gt;Coalition Collapse&lt;/td&gt;
+&lt;td&gt;Approval &amp;lt; 40 at any non-election check&lt;/td&gt;
+&lt;td&gt;Immediate off-schedule Election Check&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;26&lt;/td&gt;
+&lt;td&gt;Heatwave Blackout&lt;/td&gt;
+&lt;td&gt;Infrastructure &amp;lt; 45 AND Pollution &amp;gt; 55&lt;/td&gt;
+&lt;td&gt;Health −6, Employment −3&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;27&lt;/td&gt;
+&lt;td&gt;Grain Export Ban&lt;/td&gt;
+&lt;td&gt;Inflation &amp;gt; 10%&lt;/td&gt;
+&lt;td&gt;Food Safety −10, Treasury +15 GC&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;28&lt;/td&gt;
+&lt;td&gt;Metro Construction Scandal&lt;/td&gt;
+&lt;td&gt;Transport Reputation &amp;lt; 30&lt;/td&gt;
+&lt;td&gt;Transport's Infrastructure gains halved 2 rounds, Corruption +4&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;29&lt;/td&gt;
+&lt;td&gt;Doctor Emigration Wave&lt;/td&gt;
+&lt;td&gt;Health Reputation &amp;lt; 25&lt;/td&gt;
+&lt;td&gt;−2 Doctors permanent, Health −5&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;30&lt;/td&gt;
+&lt;td&gt;Social Media Blackout Order&lt;/td&gt;
+&lt;td&gt;PM used Declare Emergency this game&lt;/td&gt;
+&lt;td&gt;Trust −8, Media Credits −2 next round&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;31&lt;/td&gt;
+&lt;td&gt;Religious Festival Clash&lt;/td&gt;
+&lt;td&gt;Crime &amp;gt; 45 AND Trust &amp;lt; 50&lt;/td&gt;
+&lt;td&gt;2 cubes Working → Sick, Police forced free Patrol (mandatory)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;32&lt;/td&gt;
+&lt;td&gt;Startup Tax Evasion Exposed&lt;/td&gt;
+&lt;td&gt;Finance Reputation &amp;lt; 30&lt;/td&gt;
+&lt;td&gt;Treasury −20 GC, Corruption +5&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;33&lt;/td&gt;
+&lt;td&gt;School Building Collapse&lt;/td&gt;
+&lt;td&gt;Education Tier ≤ 1 AND Infrastructure &amp;lt; 40&lt;/td&gt;
+&lt;td&gt;1 cube removed, Education −10, Trust −10&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;34&lt;/td&gt;
+&lt;td&gt;Cyclone Landfall&lt;/td&gt;
+&lt;td&gt;scheduled, every 4th round&lt;/td&gt;
+&lt;td&gt;Infrastructure −10, Health −5, all −1 AP; Municipal may spend 2 AP to halve&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;35&lt;/td&gt;
+&lt;td&gt;Anti-Corruption Rally&lt;/td&gt;
+&lt;td&gt;Corruption &amp;gt; 55&lt;/td&gt;
+&lt;td&gt;Trust +5, every player reveals one Hidden token of their choice&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;36&lt;/td&gt;
+&lt;td&gt;Black Market Medicine Bust&lt;/td&gt;
+&lt;td&gt;Police Raid succeeded this game AND Health &amp;lt; 60&lt;/td&gt;
+&lt;td&gt;Health +5, Police Reputation +8&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;37&lt;/td&gt;
+&lt;td&gt;Farmer Debt Crisis&lt;/td&gt;
+&lt;td&gt;Farmer Support unused 3+ rounds&lt;/td&gt;
+&lt;td&gt;Employment −5, Crime +3&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;38&lt;/td&gt;
+&lt;td&gt;Judicial Reform Bill&lt;/td&gt;
+&lt;td&gt;PM spends any AP this round&lt;/td&gt;
+&lt;td&gt;Judiciary +1 free Court Slot permanent, Trust +3&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;39&lt;/td&gt;
+&lt;td&gt;Global Recession&lt;/td&gt;
+&lt;td&gt;random, ~1-in-40&lt;/td&gt;
+&lt;td&gt;Treasury −15%, Employment −8, Inflation +3&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;40&lt;/td&gt;
+&lt;td&gt;Grassroots Success Story&lt;/td&gt;
+&lt;td&gt;Trust &amp;gt; 75 AND Corruption &amp;lt; 25&lt;/td&gt;
+&lt;td&gt;Choose any department: Reputation +15&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;Deck construction:&lt;/strong&gt; shuffle all 40, but pull #34 (Cyclone Landfall) and reinsert manually every 4th round — the one scheduled crisis, everything else random.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h1 id="part-9-2-player-scaling"&gt;PART 9 — 2-PLAYER SCALING&lt;/h1&gt;
+&lt;p&gt;Each of 2 players controls a &lt;strong&gt;bloc of 3 departments&lt;/strong&gt;; the rest run automated.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Bloc A (Order &amp;amp; Society):&lt;/strong&gt; Police, Judiciary, Media&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Bloc B (Economy &amp;amp; Infrastructure):&lt;/strong&gt; Finance, Transport, Municipal&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Automated:&lt;/strong&gt; Health, Education, Food, PM&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;AI Department Rules:&lt;/strong&gt;
+1. Each round, resolve the single highest-priority action: if main stat &amp;lt; 50, take the cheapest stat-boosting action; else take the cheapest affordable Upgrade step.
+2. AI departments never take Interference and never enter their Bribe Deck.
+3. AI departments &lt;em&gt;can&lt;/em&gt; be targeted by player Interference — starving your opponent's bloc via their supporting AI departments is a legitimate strategy.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Population:&lt;/strong&gt; 40 cubes. &lt;strong&gt;Capacity scales down:&lt;/strong&gt; Health Beds 6/round, Court Slots 4/round, Waste 7/round.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Victory conditions:&lt;/strong&gt; numerically unchanged — 2-player is meant to feel tighter and harder, not diluted.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;AP pooling:&lt;/strong&gt; each player gets their bloc's combined AP as one shared pool per round (Bloc A: 18 AP base before bonuses), spendable across their 3 departments however they choose — the one place the "separate department turns" rule bends, necessary to keep round length sane.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h1 id="part-10-solo-mode"&gt;PART 10 — SOLO MODE&lt;/h1&gt;
+&lt;p&gt;A genuinely different problem from 2-player: one person runs all 9 departments against systemic pressure instead of other players.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Game length:&lt;/strong&gt; 10 rounds instead of 12 (single-handed governance is harder to sustain — the shorter clock reflects that rather than pretending it's equally easy).&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;AP:&lt;/strong&gt; each department keeps its own AP pool and Upgrade Tree independently — no pooling, since the challenge is juggling 9 separate small budgets, not having too little total AP.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;No negotiation, no Interference:&lt;/strong&gt; with no other player to target or bluff, Interference Actions are unavailable. In their place:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Self-Audit Clock:&lt;/strong&gt; every round, roll 1d6. On a 6, one random existing Hidden token (Corruption, if any) is automatically exposed — representing internal whistleblowers/press scrutiny operating without another player having to spend an Investigate action. This keeps the Bribe Deck's temptation real (bribes are still profitable) without needing an opponent to make them risky.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Escalating Crisis Draw:&lt;/strong&gt; every 3rd round, draw &lt;strong&gt;two&lt;/strong&gt; Crisis cards instead of one (both resolve) — replacing the multiplayer tension of Interference with straightforward systemic pressure that scales as the game goes on.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Elections:&lt;/strong&gt; still check at rounds 4, 8 (10-round game — no Round 12 check; final Reform Victory check happens at end of Round 10 instead). A failed Election Check (Approval &amp;lt; 40) in solo mode doesn't reshuffle seats (there's no one to reshuffle to) — instead, Corruption +10 and Treasury −20% apply directly, same as the multiplayer penalty minus the seat change.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Victory:&lt;/strong&gt; Reform Victory only, at the same numeric thresholds, checked at end of Round 10. Oligarch and Syndicate victories don't make sense without another player to "win against," but the Personal Wealth Track still exists as an optional end-game &lt;strong&gt;corruption score&lt;/strong&gt; — how much you profited off a country you were also trying to save — for replayability and bragging rights, not as a win condition.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Why this is a different design problem than 2-player:&lt;/strong&gt; 2-player still has another human to bluff, negotiate with, and catch — the game just needs fewer seats. Solo removes the social layer entirely, so the challenge has to come from the systems themselves (self-audit randomness, escalating crises, a tighter clock) rather than from another person's decisions.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h1 id="part-11-full-worked-round-round-6-4-players"&gt;PART 11 — FULL WORKED ROUND (Round 6, 4 players)&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;Start:&lt;/strong&gt; Trust 58, Corruption 44, Crime 38, Health 47, Treasury 165 GC.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Life Phase:&lt;/strong&gt; Health 47 (no auto-penalty, above 40 threshold). Employment 55 (&amp;lt;60 → 1 cube Working→Unemployed). Tax: (34 Working × ₹2) − (7% × 165) ≈ ₹68 − ₹11.5 = &lt;strong&gt;+₹56.5 GC&lt;/strong&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Department Phase:&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Municipal (6 AP): 4 AP + 10 GC Covert Interference on Health (Dump Overflow). Hidden token placed.&lt;/li&gt;
+&lt;li&gt;Health (6 AP): reacts with Absorb (halves the 3-cube overflow → Health −2). Spends remaining AP: Treat Patients (1), Hire Doctors (2).&lt;/li&gt;
+&lt;li&gt;Police (6 AP): Investigate (2 AP) — flips Municipal's token successfully. Remaining AP: Patrol ×2.&lt;/li&gt;
+&lt;li&gt;Finance (6 AP): Adjust Tax Rate +2%, Audit on Media (nothing found), Stimulus Package.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Resolution Phase:&lt;/strong&gt; Municipal Reputation −20, Corruption 44→49. Crisis drawn: &lt;strong&gt;#16 Slum Fire&lt;/strong&gt; (Pollution already elevated) — triggers, 3 more cubes Working→Sick, second Reputation hit for Municipal.&lt;/li&gt;
+&lt;li&gt;Municipal now carries two Reputation hits into Round 8's election — a consequence produced by the actual formulas, not asserted narrative.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr /&gt;
+&lt;h1 id="part-12-component-list-build-priority"&gt;PART 12 — COMPONENT LIST &amp;amp; BUILD PRIORITY&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;Components:&lt;/strong&gt; 1 National Stat board (11 tracks) · 60 Population cubes (5 colors) · 9 Department boards · Resource tokens per department (~15 each) · Treasury pool + Personal Wealth tracks (index cards fine for prototype) · Bribe deck (~35 cards total across 9 decks) · Crisis deck (40 cards) · Election tracker · Hidden token chips (one color per department, two types: Corruption / Interference)&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Recommended build order for a first playtest:&lt;/strong&gt;
+1. Stat board + Population pools + Life Phase lookup table (the shared spine everything else plugs into)
+2. Police + Health + Municipal boards (these three demonstrate the Interference/Capacity loop end-to-end)
+3. Their 3 Bribe Decks + the 40-card Crisis deck
+4. Finance (needed for Treasury flow to feel real)
+5. Remaining 5 departments once the core loop is confirmed fun&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;What's genuinely still open after this document:&lt;/strong&gt; a one-page printable reference card per department (Part 13 below is the compact version; a full illustrated card layout is a graphic-design pass, not a rules pass), and real numeric tuning from actual play — every AP cost and GC value here is a first-pass design estimate, not playtested.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h1 id="part-13-quick-reference-summary-table"&gt;PART 13 — QUICK-REFERENCE SUMMARY TABLE&lt;/h1&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Department&lt;/th&gt;
+&lt;th&gt;Base AP&lt;/th&gt;
+&lt;th&gt;Capacity?&lt;/th&gt;
+&lt;th&gt;Bribe Deck Size&lt;/th&gt;
+&lt;th&gt;Signature Interference&lt;/th&gt;
+&lt;th&gt;Covert Option?&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Police&lt;/td&gt;
+&lt;td&gt;6&lt;/td&gt;
+&lt;td&gt;No&lt;/td&gt;
+&lt;td&gt;4&lt;/td&gt;
+&lt;td&gt;Selective Enforcement&lt;/td&gt;
+&lt;td&gt;No (open only)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Health&lt;/td&gt;
+&lt;td&gt;6&lt;/td&gt;
+&lt;td&gt;Yes (8 beds)&lt;/td&gt;
+&lt;td&gt;4&lt;/td&gt;
+&lt;td&gt;Health Advisory&lt;/td&gt;
+&lt;td&gt;No (open only)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Education&lt;/td&gt;
+&lt;td&gt;6&lt;/td&gt;
+&lt;td&gt;No&lt;/td&gt;
+&lt;td&gt;4&lt;/td&gt;
+&lt;td&gt;Brain Drain Leak&lt;/td&gt;
+&lt;td&gt;Yes (covert only)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Transport&lt;/td&gt;
+&lt;td&gt;6&lt;/td&gt;
+&lt;td&gt;No&lt;/td&gt;
+&lt;td&gt;4&lt;/td&gt;
+&lt;td&gt;Route Diversion&lt;/td&gt;
+&lt;td&gt;No (open only)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Municipal&lt;/td&gt;
+&lt;td&gt;6&lt;/td&gt;
+&lt;td&gt;Yes (10 waste)&lt;/td&gt;
+&lt;td&gt;4&lt;/td&gt;
+&lt;td&gt;Dump Overflow&lt;/td&gt;
+&lt;td&gt;Both options&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Food&lt;/td&gt;
+&lt;td&gt;6&lt;/td&gt;
+&lt;td&gt;No&lt;/td&gt;
+&lt;td&gt;4&lt;/td&gt;
+&lt;td&gt;Supply Squeeze&lt;/td&gt;
+&lt;td&gt;No (open only)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Finance&lt;/td&gt;
+&lt;td&gt;6&lt;/td&gt;
+&lt;td&gt;No&lt;/td&gt;
+&lt;td&gt;4&lt;/td&gt;
+&lt;td&gt;Frozen Funds&lt;/td&gt;
+&lt;td&gt;No (open only)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Media&lt;/td&gt;
+&lt;td&gt;6&lt;/td&gt;
+&lt;td&gt;No&lt;/td&gt;
+&lt;td&gt;4&lt;/td&gt;
+&lt;td&gt;(is the system itself)&lt;/td&gt;
+&lt;td&gt;N/A&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Judiciary&lt;/td&gt;
+&lt;td&gt;6&lt;/td&gt;
+&lt;td&gt;Yes (6 slots)&lt;/td&gt;
+&lt;td&gt;4&lt;/td&gt;
+&lt;td&gt;Injunction&lt;/td&gt;
+&lt;td&gt;No (open only, reactive)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;PM&lt;/td&gt;
+&lt;td&gt;6 (grants, doesn't hold)&lt;/td&gt;
+&lt;td&gt;No&lt;/td&gt;
+&lt;td&gt;3&lt;/td&gt;
+&lt;td&gt;(Standard Actions double as interference)&lt;/td&gt;
+&lt;td&gt;No (always open)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr /&gt;
+&lt;p&gt;&lt;em&gt;This is now a complete, internally consistent ruleset: every stat, every department, every bribe, every crisis, and both alternate player counts are covered. The one thing genuinely missing is table time — AP costs, GC values, and Capacity numbers are first-pass design estimates and will want tuning once you actually run a session. If you want, next step could be a condensed 2-page "learn to play" summary for teaching it to a group cold, since this master document is a reference, not a teaching tool.&lt;/em&gt;&lt;/p&gt;</script>
+<script>
+  function decode(el){
+    const txt = document.createElement('textarea');
+    txt.innerHTML = el.textContent;
+    return txt.value;
+  }
+  document.getElementById('tocMount').innerHTML =
+    '<h4>Contents</h4>' + decode(document.getElementById('toc-data'));
+  document.getElementById('mainMount').innerHTML =
+    decode(document.getElementById('body-data'));
+</script>
+</body>
+</html>
