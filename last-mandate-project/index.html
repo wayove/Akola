@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Last Mandate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#eceef1; --card:#ffffff; --ink:#1c1e22; --dim:#8a8f98; --line:#dfe2e6;
+    --accent:#e05a4e; --accent-soft:#fbe3e0; --good:#3f9a72;
+    --shadow: 0 8px 22px rgba(20,20,30,0.07);
+  }
+  *{ box-sizing:border-box; }
+  html, body{ height:100%; }
+  body{ margin:0; background:#d9dce0; color:var(--ink); font-family:'Inter',sans-serif; -webkit-font-smoothing:antialiased; height:100vh; overflow:hidden; display:flex; flex-direction:column; }
+  .mono{ font-family:'IBM Plex Mono',monospace; }
+
+  .board-frame{ margin:8px; flex:1; min-height:0; display:flex; flex-direction:column; background:var(--bg); border:3px solid #c7cbd1; border-radius:20px; box-shadow:inset 0 0 0 1px #fff, 0 2px 14px rgba(0,0,0,0.06); overflow:hidden; }
+
+  header{ flex:0 0 auto; padding:8px 16px 5px; border-bottom:2px solid var(--line); background:#f3f4f6; }
+  .top-row{ display:flex; align-items:center; justify-content:space-between; }
+  .brand{ display:flex; align-items:center; gap:8px; }
+  .menu-dot{ width:28px; height:28px; border-radius:50%; background:var(--card); box-shadow:var(--shadow); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .brand h1{ font-size:0.88rem; font-weight:800; margin:0; letter-spacing:-0.01em; }
+  .brand p{ margin:0; font-size:0.6rem; color:var(--dim); }
+  .round-chip{ background:var(--card); box-shadow:var(--shadow); border-radius:100px; padding:5px 13px; font-family:'IBM Plex Mono',monospace; font-size:0.66rem; font-weight:600; }
+  .dash-row{ display:flex; align-items:center; justify-content:center; gap:16px; flex-wrap:wrap; padding:6px 0 7px; }
+  .score-strip{ display:flex; gap:6px; overflow-x:auto; }
+  .phase-crumb{ display:flex; align-items:center; gap:5px; flex-shrink:0; padding-left:10px; border-left:1.5px solid var(--line); }
+  .crumb-item{ font-size:0.62rem; font-weight:700; color:var(--dim); text-transform:uppercase; letter-spacing:0.03em; padding:3px 7px; border-radius:20px; transition:all .3s ease; }
+  .crumb-item.active{ color:#fff; background:var(--accent); }
+  .crumb-item.done{ color:var(--good); }
+  .crumb-sep{ color:var(--line); font-size:0.7rem; }
+  .score-tile{ background:var(--card); border-radius:10px; padding:5px 9px; min-width:58px; flex-shrink:0; box-shadow:var(--shadow); transition:transform .5s cubic-bezier(.2,.8,.3,1), box-shadow .5s ease; }
+  .score-tile .l{ font-size:0.52rem; color:var(--dim); text-transform:uppercase; letter-spacing:0.03em; }
+  .score-tile .v{ font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:0.8rem; }
+  .score-tile.pulse{ transform:scale(1.4) translateY(-4px); box-shadow:0 16px 34px rgba(224,90,78,0.4); z-index:6; }
+  .score-tile.pulse .v{ color:var(--accent); }
+  .score-tile.pulse-good{ box-shadow:0 16px 34px rgba(63,154,114,0.4); }
+  .score-tile.pulse-good .v{ color:var(--good); }
+
+  .locked-note{ font-size:0.6rem; color:#b5b9bf; font-style:italic; text-align:center; padding:14px 0; }
+
+  .play-area{ flex:1 1 auto; min-height:0; display:grid; grid-template-columns:150px 1fr 150px; gap:8px; padding:8px 10px; }
+  @media(max-width:950px){ .play-area{ grid-template-columns:1fr; } .side-panel{ display:none; } }
+
+  .side-panel{ background:var(--card); border:2px solid var(--line); border-radius:14px; padding:9px 8px; display:flex; flex-direction:column; gap:7px; min-height:0; }
+  .side-panel h3{ font-size:0.58rem; text-transform:uppercase; letter-spacing:0.04em; color:var(--dim); margin:0; font-weight:800; text-align:center; }
+  .deck{ display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; flex:0 0 auto; }
+  .deck .stack{ position:relative; width:44px; height:58px; }
+  .deck .card-back{ position:absolute; inset:0; border-radius:10px; background:var(--card); box-shadow:var(--shadow); display:flex; align-items:center; justify-content:center; border:1.5px dashed var(--line); }
+  .deck .card-back:nth-child(1){ transform:translate(2.5px,2.5px); opacity:0.55; }
+  .deck .card-back:nth-child(2){ transform:translate(1.2px,1.2px); opacity:0.8; }
+  .deck .card-back.top{ transform:none; opacity:1; border-style:solid; transition:transform .15s ease; }
+  .deck:active .card-back.top{ transform:scale(0.9); }
+  .deck .card-back svg{ width:17px; height:17px; }
+  .deck .count{ font-family:'IBM Plex Mono',monospace; font-size:0.74rem; font-weight:800; }
+  .deck .lbl{ font-size:0.54rem; color:var(--dim); font-weight:700; }
+
+  .mini-panel{ flex:0 0 auto; border-top:1px dashed var(--line); padding-top:6px; }
+  .mini-panel-head{ display:flex; align-items:center; justify-content:space-between; cursor:pointer; }
+  .mini-panel-head span{ font-size:0.56rem; font-weight:800; color:var(--dim); text-transform:uppercase; letter-spacing:0.03em; }
+  .mini-panel-head .chev{ font-size:0.6rem; color:var(--dim); transition:transform .2s ease; }
+  .mini-panel.open .chev{ transform:rotate(180deg); }
+  .mini-panel-body{ display:none; font-size:0.58rem; line-height:1.4; color:#4a4d54; padding-top:6px; }
+  .mini-panel.open .mini-panel-body{ display:block; }
+  .mini-panel-body b{ color:var(--ink); }
+  .mini-panel-body .row{ padding:4px 0; border-top:1px dashed var(--line); }
+  .mini-panel-body .row:first-child{ border-top:none; }
+
+  .side-log{ width:100%; flex:1; min-height:0; overflow-y:auto; display:flex; flex-direction:column; gap:4px; }
+  .side-log-item{ font-size:0.56rem; color:#4a4d54; background:var(--bg); border-radius:7px; padding:5px 6px; line-height:1.25; animation:logIn .3s ease; }
+  @keyframes logIn{ from{ opacity:0; transform:translateY(-6px);} to{ opacity:1; transform:none; } }
+  .side-log-empty{ font-size:0.56rem; color:#b5b9bf; font-style:italic; text-align:center; margin-top:6px; }
+  .pin-item{ display:flex; justify-content:space-between; gap:4px; font-size:0.56rem; background:var(--bg); border-left:2px solid var(--accent); border-radius:6px; padding:5px 6px; margin-bottom:4px; }
+  .pin-item button{ background:none; border:none; color:var(--dim); cursor:pointer; font-size:0.7rem; line-height:1; padding:0; }
+
+  main{ display:flex; flex-direction:column; min-height:0; gap:5px; background:var(--card); border:2px solid var(--line); border-radius:14px; padding:8px 10px; }
+
+  .guide-banner{ flex:0 0 auto; background:#fff7ed; border:1.5px solid #f3d9b8; border-radius:11px; padding:7px 12px; font-size:0.66rem; color:#7a5a2e; display:flex; align-items:center; gap:8px; }
+  .guide-banner b{ color:#5a3f18; }
+  .guide-banner .gbtn{ margin-left:auto; background:var(--ink); color:#fff; border:none; padding:5px 11px; border-radius:100px; font-size:0.62rem; font-weight:700; cursor:pointer; flex-shrink:0; }
+  .deck.locked{ opacity:0.35; pointer-events:none; }
+  .dept-block.locked-turn{ opacity:0.35; }
+  .city-caption{ text-align:center; padding:3px 0 4px; font-size:0.58rem; color:var(--dim); flex:0 0 auto; }
+  .city-caption b{ color:var(--ink); }
+  .pop-strip{ display:flex; gap:5px; flex:0 0 auto; justify-content:center; flex-wrap:wrap; }
+  .pop-tile{ background:var(--bg); border-radius:9px; padding:4px 7px; text-align:center; min-width:46px; }
+  .pop-tile .l{ font-size:0.5rem; color:var(--dim); text-transform:uppercase; letter-spacing:0.02em; }
+  .pop-tile .v{ font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:0.78rem; }
+
+  .center-columns{ flex:1 1 auto; min-height:0; display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  @media(max-width:760px){ .center-columns{ grid-template-columns:1fr; } }
+  .map-col{ display:flex; flex-direction:column; min-height:0; gap:4px; }
+  .dept-col{ display:flex; flex-direction:column; min-height:0; gap:6px; }
+
+  .cityscape-wrap{ border-radius:10px; overflow:hidden; flex:1 1 auto; min-height:0; background:#fbfcfd; border:1px solid var(--line); }
+  .cityscape-wrap svg{ width:100%; height:100%; display:block; }
+
+  .dept-grid{ display:grid; grid-template-columns:repeat(5,1fr); gap:5px; flex:0 0 auto; }
+  .dept-block{ background:var(--bg); border-radius:10px; padding:5px 3px; display:flex; flex-direction:column; align-items:center; gap:2px; cursor:pointer; opacity:0.6; transition:all .35s cubic-bezier(.2,.8,.3,1); border:2px solid transparent; }
+  .dept-block .ic{ width:15px; height:15px; }
+  .dept-block .nm{ font-size:0.46rem; font-weight:700; color:var(--dim); text-align:center; line-height:1.1; }
+  .dept-block .ap{ font-family:'IBM Plex Mono',monospace; font-size:0.5rem; color:var(--dim); }
+  .dept-block.active{ opacity:1; background:#fff; transform:scale(1.1); box-shadow:0 10px 22px rgba(20,20,30,0.14); }
+
+  #focusMount{ flex:1 1 auto; min-height:0; display:flex; position:relative; }
+  .focus-card{ background:var(--card); border:2px solid var(--line); border-radius:16px; box-shadow:var(--shadow); padding:10px 14px; position:relative; overflow:hidden; flex:1; display:flex; flex-direction:column; min-height:0; }
+  .focus-card.enter{ animation:cardPop .5s cubic-bezier(.2,.8,.3,1); }
+  .focus-card.exit{ animation:cardOut .18s ease forwards; }
+  @keyframes cardPop{ from{ opacity:0; transform:scale(0.92) translateX(20px);} to{ opacity:1; transform:none; } }
+  @keyframes cardOut{ from{ opacity:1; transform:none;} to{ opacity:0; transform:scale(0.95) translateX(-14px);} }
+  .focus-card::before{ content:''; position:absolute; top:0; left:0; width:4px; height:100%; background:var(--accent-dept, var(--accent)); }
+  .focus-head{ display:flex; align-items:center; gap:8px; margin-bottom:2px; flex:0 0 auto; }
+  .focus-icon{ width:30px; height:30px; border-radius:9px; background:var(--accent-soft-dept, var(--accent-soft)); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .focus-icon svg{ width:16px; height:16px; }
+  .focus-head h2{ margin:0; font-size:0.9rem; font-weight:800; letter-spacing:-0.01em; }
+  .focus-head p{ margin:0; font-size:0.62rem; color:var(--dim); }
+
+  .focus-stats{ display:flex; gap:10px; margin:6px 0 6px; flex-wrap:wrap; flex:0 0 auto; }
+  .fstat .l{ font-size:0.54rem; color:var(--dim); text-transform:uppercase; letter-spacing:0.03em; }
+  .fstat .v{ font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:0.86rem; display:inline-block; transition:transform .3s ease, color .3s ease; }
+  .fstat.pulse .v{ transform:scale(1.4); color:var(--accent); }
+  .fstat.pulse-good .v{ transform:scale(1.4); color:var(--good); }
+
+  .focus-scroll{ flex:1 1 auto; min-height:0; overflow-y:auto; padding-right:2px; }
+  .section-label{ font-size:0.56rem; font-weight:800; text-transform:uppercase; letter-spacing:0.04em; color:var(--dim); margin:6px 0 4px; }
+  .action-grid{ display:grid; grid-template-columns:1fr; gap:6px; }
+  .action-btn{ background:var(--bg); border:1.5px solid var(--line); border-radius:11px; padding:7px 9px; text-align:left; cursor:pointer; transition:all .15s ease; font-family:'Inter',sans-serif; }
+  .action-btn:hover:not(:disabled){ border-color:var(--accent-dept, var(--accent)); background:#fff; transform:translateY(-1px); box-shadow:0 6px 14px rgba(20,20,30,0.08); }
+  .action-btn:active:not(:disabled){ transform:scale(0.97); }
+  .action-btn:disabled{ opacity:0.35; cursor:not-allowed; }
+  .action-btn .an{ font-weight:700; font-size:0.7rem; display:flex; justify-content:space-between; align-items:center; }
+  .action-btn .ac{ font-family:'IBM Plex Mono',monospace; font-size:0.58rem; color:var(--dim); background:#fff; padding:1px 5px; border-radius:20px; }
+  .action-btn .ae{ font-size:0.6rem; color:var(--dim); margin-top:2px; line-height:1.25; }
+
+  .tier-row{ display:flex; align-items:center; justify-content:space-between; gap:6px; font-size:0.62rem; padding:5px 8px; border-radius:9px; margin-bottom:4px; cursor:pointer; background:var(--bg); border:1.5px solid transparent; }
+  .tier-row:hover{ border-color:var(--accent-dept, var(--accent)); }
+  .tier-row.done{ opacity:0.5; text-decoration:line-through; cursor:default; }
+  .tier-row.done:hover{ border-color:transparent; }
+  .tier-row .tc{ font-family:'IBM Plex Mono',monospace; font-size:0.56rem; color:var(--dim); white-space:nowrap; }
+
+  .res-row{ display:flex; justify-content:space-between; font-size:0.64rem; padding:3px 0; }
+  .res-row .l{ color:var(--dim); }
+  .res-row .v{ font-family:'IBM Plex Mono',monospace; font-weight:700; }
+
+  .end-turn-row{ display:flex; justify-content:flex-end; flex:0 0 auto; padding-top:5px; }
+  .end-turn-btn{ background:var(--ink); color:#fff; border:none; padding:7px 14px; border-radius:100px; font-weight:700; font-size:0.7rem; cursor:pointer; display:flex; align-items:center; gap:5px; }
+  .end-turn-btn:active{ transform:scale(0.95); }
+
+  .float-num{ position:fixed; transform:translate(-50%,0); font-family:'IBM Plex Mono',monospace; font-weight:800; font-size:1.05rem; pointer-events:none; z-index:200; opacity:1; transition:transform .9s cubic-bezier(.15,.8,.2,1), opacity .9s ease; text-shadow:0 2px 8px rgba(255,255,255,0.9); }
+  .float-num.bad{ color:var(--accent); } .float-num.good{ color:var(--good); }
+  .float-num.go{ transform:translate(-50%,-65px) scale(1.3); opacity:0; }
+
+  .overlay{ position:fixed; inset:0; background:rgba(20,20,25,0.5); backdrop-filter:blur(4px); display:flex; align-items:center; justify-content:center; z-index:60; padding:20px; }
+  .hidden{ display:none !important; }
+  .reveal-card{ background:var(--card); border-radius:22px; box-shadow:0 34px 80px rgba(0,0,0,0.3); padding:24px 22px; max-width:320px; width:100%; max-height:86vh; overflow-y:auto; }
+  .reveal-card.from-left{ animation:flyInLeft .55s cubic-bezier(.16,.85,.3,1); }
+  .reveal-card.from-right{ animation:flyInRight .55s cubic-bezier(.16,.85,.3,1); }
+  @keyframes flyInLeft{ from{ transform:translateX(-260px) rotate(-10deg) scale(0.8); opacity:0;} to{ transform:none; opacity:1; } }
+  @keyframes flyInRight{ from{ transform:translateX(260px) rotate(10deg) scale(0.8); opacity:0;} to{ transform:none; opacity:1; } }
+  .reveal-kicker{ font-size:0.64rem; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; color:var(--accent); margin-bottom:6px; }
+  .reveal-card h2{ margin:0 0 8px; font-size:1.15rem; }
+  .reveal-tags{ display:flex; gap:5px; flex-wrap:wrap; margin-bottom:10px; }
+  .reveal-tag{ background:var(--accent-soft); color:var(--accent); font-size:0.6rem; font-weight:700; padding:3px 9px; border-radius:20px; }
+  .reveal-card p.body{ font-size:0.78rem; color:#4a4d54; line-height:1.5; margin-bottom:11px; }
+  .reveal-effect{ background:var(--bg); border-radius:11px; padding:8px 10px; font-size:0.74rem; color:var(--ink); margin-bottom:6px; }
+  .reveal-actions{ display:flex; gap:8px; margin-top:12px; }
+  .reveal-actions button{ flex:1; border:none; padding:10px; border-radius:100px; font-weight:700; cursor:pointer; font-size:0.78rem; }
+  .btn-accept{ background:var(--ink); color:#fff; } .btn-decline{ background:var(--bg); color:var(--ink); } .btn-ok{ background:var(--ink); color:#fff; width:100%; }
+  .pin-btn{ width:100%; margin-top:8px; background:transparent; border:1.5px dashed var(--accent); color:var(--accent); padding:8px; border-radius:10px; font-size:0.7rem; font-weight:700; cursor:pointer; }
+  .pin-btn.hidden{ display:none; }
+  .pin-btn:disabled{ opacity:0.4; }
+</style>
+</head>
+<body>
+
+<div class="board-frame">
+  <header>
+    <div class="top-row">
+      <div class="brand">
+        <div class="menu-dot"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#1c1e22" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></div>
+        <div><h1>The Last Mandate</h1><p>Round <span id="roundNum">1</span> of 12</p></div>
+      </div>
+      <div class="round-chip" id="phaseChip">TURN 1 / 10</div>
+    </div>
+    <div class="dash-row">
+      <div class="score-strip" id="scoreStrip"></div>
+      <div class="phase-crumb" id="phaseSteps"></div>
+    </div>
+  </header>
+
+  <div class="play-area">
+    <div class="side-panel">
+      <h3>Crisis Zone</h3>
+      <div class="deck" id="crisisDeck">
+        <div class="stack"><div class="card-back"></div><div class="card-back"></div>
+          <div class="card-back top"><svg viewBox="0 0 24 24" fill="none" stroke="#e05a4e" stroke-width="2"><path d="M12 9v4M12 17h.01M10.3 3.9L2.7 17.5c-.5.9.1 2 1.1 2h16.4c1 0 1.6-1.1 1.1-2L13.7 3.9c-.5-.9-1.9-.9-2.4 0z"/></svg></div>
+        </div>
+        <div class="count" id="crisisCount"></div>
+        <div class="lbl">remaining</div>
+      </div>
+      <div class="side-log" id="crisisLog"><div class="side-log-empty">No crisis drawn yet.</div></div>
+      <div class="mini-panel" id="victoryPanel">
+        <div class="mini-panel-head" id="victoryToggle"><span>🏆 Victory</span><span class="chev">▾</span></div>
+        <div class="mini-panel-body">
+          <div class="row"><b>Reform</b> (Rd 12): Corruption ≤15, Trust ≥85, Health ≥80, Education ≥80, Crime ≤20, Treasury ≥0.</div>
+          <div class="row"><b>Oligarch</b> (any round): a dept's Wealth ≥150 <i>and</i> its Reputation beats national Trust. Wealth alone never wins.</div>
+          <div class="row"><b>Collapse</b>: Corruption hits 95 — everyone loses instantly.</div>
+        </div>
+      </div>
+    </div>
+
+    <main>
+      <div class="guide-banner" id="guideBanner"></div>
+      <div class="center-columns">
+        <div class="map-col">
+          <div class="cityscape-wrap"><svg id="citySvg" viewBox="0 0 600 600" preserveAspectRatio="none"></svg></div>
+          <div class="city-caption">City stability: <b id="chaosLabel">Stable</b></div>
+          <div class="pop-strip" id="popStrip"></div>
+        </div>
+        <div class="dept-col">
+          <div class="dept-grid" id="deptGrid"></div>
+          <div id="focusMount"></div>
+        </div>
+      </div>
+    </main>
+
+    <div class="side-panel">
+      <h3>Offer Zone</h3>
+      <div class="deck" id="bribeDeck">
+        <div class="stack"><div class="card-back"></div><div class="card-back"></div>
+          <div class="card-back top"><svg viewBox="0 0 24 24" fill="none" stroke="#e05a4e" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></div>
+        </div>
+        <div class="count" id="bribeCount"></div>
+        <div class="lbl">cards left</div>
+      </div>
+      <div class="side-log" id="bribeLog"><div class="side-log-empty">No offer drawn yet.</div></div>
+      <div class="mini-panel open" id="pinnedPanel">
+        <div class="mini-panel-head" id="pinnedToggle"><span>📌 Pinned</span><span class="chev">▾</span></div>
+        <div class="mini-panel-body" style="display:block;">
+          <div id="pinnedList"><div class="side-log-empty">Nothing pinned.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay hidden" id="revealOverlay">
+  <div class="reveal-card" id="revealCard">
+    <div class="reveal-kicker" id="revealKicker">Crisis</div>
+    <h2 id="revealTitle"></h2>
+    <div class="reveal-tags" id="revealTags"></div>
+    <p class="body" id="revealBody"></p>
+    <div class="reveal-effect" id="revealEffect"></div>
+    <div id="revealDecision"></div>
+    <button class="pin-btn hidden" id="pinBtn">📌 Pin as a reminder for later rounds</button>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script>
+const clamp=(v,lo=0,hi=100)=>Math.max(lo,Math.min(hi,v));
+
+let S = {
+  round:1, turnIndex:0, phase:'department', pins:[], gameOver:false,
+  stats:{ trust:55, corruption:40, crime:35, health:50, education:45, infrastructure:50,
+          pollution:45, employment:60, foodSafety:55, inflation:6, treasury:150, debt:200 },
+  pop:{ working:34, student:10, sick:5, unemployed:8, retired:3 },
+  dep:{},
+};
+DEPT_LIST.forEach(function(d){
+  const res = {}; d.resources.forEach(function(r){ res[r.key]=r.start; });
+  S.dep[d.id] = { ap:6, apMax:6, rep:50, wealth:0, tier:0, res:res };
+});
+
+const STAT_META = [
+  ['trust','Trust'],['corruption','Corruption'],['crime','Crime'],['treasury','Treasury'],
+  ['health','Health'],['education','Education'],['infrastructure','Infra'],['pollution','Pollution'],
+];
+const STAT_WORDS = { 'trust':'trust','corruption':'corruption','crime':'crime','health':'health','education':'education',
+  'infrastructure':'infrastructure','pollution':'pollution','employment':'employment',
+  'food safety':'foodSafety','inflation':'inflation','treasury':'treasury','national debt':'debt','debt':'debt' };
+const PHASES = ['life','crisis','department','election'];
+const PHASE_LABELS = { life:'Life', crisis:'Crisis', department:'Cabinet', election:'Election' };
+
+/* ---------------- generic effect parser: text -> stat/resource deltas ---------------- */
+function parseEffectDeltas(text, dept){
+  const out = []; const seen = {};
+  function tryMatch(labelRaw, sign, n){
+    const label = labelRaw.trim().toLowerCase().replace(/[.,;].*$/,'').trim();
+    if(!label) return;
+    if(dept && dept.resources.length){
+      for(let i=0;i<dept.resources.length;i++){
+        const r = dept.resources[i];
+        const stem = r.label.toLowerCase().replace(/s$/,'');
+        if(label===r.label.toLowerCase() || label.indexOf(stem)===0){
+          const k='res:'+r.key; if(seen[k]) return; seen[k]=1;
+          out.push({type:'resource', key:r.key, sign:sign, n:n, label:r.label}); return;
+        }
+      }
+    }
+    let statKey = STAT_WORDS[label];
+    if(!statKey){ const firstWord = label.split(' ').slice(0,2).join(' '); statKey = STAT_WORDS[firstWord]; }
+    if(statKey){
+      const k='stat:'+statKey; if(seen[k]) return; seen[k]=1;
+      out.push({type:'stat', key:statKey, sign:sign, n:n, label:labelRaw});
+    }
+  }
+  let m;
+  const re1 = /([A-Za-z][A-Za-z ]{2,26}?)\s*([+\u2212-])\s*(\d+)/g;
+  while((m = re1.exec(text))) tryMatch(m[1], m[2]==='+'?1:-1, parseInt(m[3],10));
+  const re2 = /([+\u2212-])\s*(\d+)\s+([A-Za-z][A-Za-z ]{2,26})/g;
+  while((m = re2.exec(text))) tryMatch(m[3], m[1]==='+'?1:-1, parseInt(m[2],10));
+  return out;
+}
+function applyStatDelta(key, amount){
+  if(key==='treasury'){ S.stats.treasury = Math.max(0, S.stats.treasury+amount); return; }
+  if(key==='debt'){ S.stats.debt = Math.max(0, S.stats.debt+amount); return; }
+  if(key==='inflation'){ S.stats.inflation = clamp(S.stats.inflation+amount,0,20); return; }
+  if(key in S.stats){ S.stats[key] = clamp(S.stats[key]+amount); return; }
+}
+function applyDeltas(dept, deltas, depState){
+  deltas.forEach(function(d){
+    if(d.type==='resource'){ depState.res[d.key] = Math.max(0, depState.res[d.key] + d.sign*d.n); }
+    else { applyStatDelta(d.key, d.sign*d.n); }
+  });
+}
+function hasLingering(text){
+  return /for \d+ rounds?|next \d+|\/round\b|it continues|next round|next draw|scheduled|permanently protected|protected from expose/i.test(text);
+}
+
+function chaosScore(){ return clamp(Math.round((S.stats.corruption + S.stats.pollution + (100-S.stats.trust) + S.stats.crime)/4)); }
+
+/* ---------------- feedback ---------------- */
+function floatNumber(el, text, isGood){
+  if(!el) return;
+  const rect = el.getBoundingClientRect();
+  const span = document.createElement('div');
+  span.className = 'float-num ' + (isGood?'good':'bad');
+  span.textContent = text;
+  span.style.left = (rect.left + rect.width/2) + 'px';
+  span.style.top = (rect.top - 4) + 'px';
+  document.body.appendChild(span);
+  const raf = (typeof requestAnimationFrame==='function') ? requestAnimationFrame : function(cb){ setTimeout(cb,16); };
+  raf(function(){ span.classList.add('go'); });
+  setTimeout(function(){ span.remove(); }, 950);
+}
+function pulseEl(el, good, deltaText){
+  if(!el) return;
+  el.classList.remove('pulse','pulse-good'); void el.offsetWidth;
+  el.classList.add(good?'pulse-good':'pulse');
+  if(deltaText) floatNumber(el, deltaText, good);
+  setTimeout(function(){ el.classList.remove('pulse','pulse-good'); }, 750);
+}
+function nowMs(){ return (typeof performance!=='undefined' && performance.now) ? performance.now() : Date.now(); }
+function raf(cb){ return (typeof requestAnimationFrame==='function') ? requestAnimationFrame(cb) : setTimeout(cb,16); }
+/* The actual counting animation — ticks the displayed number from `from` to `to`
+   over `dur` ms, glowing the tile the whole time it's counting, not just a flash. */
+function countUpValue(tileEl, valueEl, from, to, isMoney, good, dur){
+  if(!valueEl || from===to){ return; }
+  dur = dur || 800;
+  tileEl.classList.remove('pulse','pulse-good'); void tileEl.offsetWidth;
+  tileEl.classList.add(good?'pulse-good':'pulse');
+  const start = nowMs();
+  function step(){
+    const t = Math.min(1, (nowMs()-start)/dur);
+    const eased = 1-Math.pow(1-t,3);
+    const cur = Math.round(from + (to-from)*eased);
+    valueEl.textContent = isMoney ? ('\u20b9'+cur) : String(cur);
+    if(t<1){ raf(step); }
+    else {
+      valueEl.textContent = isMoney ? ('\u20b9'+to) : String(to);
+      setTimeout(function(){ tileEl.classList.remove('pulse','pulse-good'); }, 250);
+    }
+  }
+  raf(step);
+  if(Math.abs(to-from)>=1) floatNumber(tileEl, (to>from?'+':'')+(to-from), good);
+}
+function snapshotNationalStats(){
+  const s = {}; STAT_META.forEach(function(p){ s[p[0]] = S.stats[p[0]]; }); return s;
+}
+const BAD_KEYS = ['crime','corruption','pollution','inflation'];
+/* Animates every national score tile that actually changed, in place, using the
+   real live DOM elements — called only after any popup covering them is closed. */
+function animateNationalStats(oldSnap, totalDurOut){
+  let maxDur = 0;
+  STAT_META.forEach(function(p, idx){
+    const key = p[0];
+    const from = oldSnap[key], to = S.stats[key];
+    if(from===to) return;
+    const tile = document.getElementById('score-'+key);
+    if(!tile) return;
+    const valEl = tile.querySelector('.v');
+    const isMoney = key==='treasury';
+    const good = BAD_KEYS.indexOf(key)>-1 ? to<from : to>from;
+    const dur = 700 + idx*40; // slight stagger so multi-stat crisis effects don't all land at once
+    countUpValue(tile, valEl, from, to, isMoney, good, dur);
+    maxDur = Math.max(maxDur, dur);
+  });
+  return maxDur;
+}
+/* Same idea as animateNationalStats, but for the AP/Reputation/Wealth numbers
+   inside the currently-open focus card — these are department-private, not
+   part of the national score strip, so they need their own pass. */
+function animateFocusDeptStats(beforeDep){
+  const map = [
+    ['fstat-ap', beforeDep.ap, S.dep[DEPT_LIST[S.turnIndex].id].ap, false],
+    ['fstat-rep', beforeDep.rep, S.dep[DEPT_LIST[S.turnIndex].id].rep, true],
+    ['fstat-wealth', beforeDep.wealth, S.dep[DEPT_LIST[S.turnIndex].id].wealth, true],
+  ];
+  map.forEach(function(m){
+    const tile = document.getElementById(m[0]);
+    if(!tile) return;
+    const valEl = tile.querySelector('.v');
+    const from = m[1], to = m[2], isMoney = m[3];
+    const good = to>from;
+    countUpValue(tile, valEl, from, to, isMoney, good, 750);
+  });
+}
+
+/* ---------------- city map (denser street grid + river) ---------------- */
+function renderCity(){
+  const chaos = chaosScore();
+  const jitter = function(amp){ return (Math.random()-0.5)*amp*(chaos/100); };
+  const parts = [];
+  for(let x=20; x<=580; x+=32){ parts.push('<line x1="'+(x+jitter(6)).toFixed(1)+'" y1="'+jitter(5).toFixed(1)+'" x2="'+(x+jitter(11)).toFixed(1)+'" y2="600" stroke="#dde0e4" stroke-width="0.8"/>'); }
+  for(let y=20; y<=580; y+=32){ parts.push('<line x1="0" y1="'+(y+jitter(5)).toFixed(1)+'" x2="600" y2="'+(y+jitter(10)).toFixed(1)+'" stroke="#dde0e4" stroke-width="0.8"/>'); }
+  const vXs=[60,140,220,300,380,460,540]; vXs.forEach(function(x){ parts.push('<line x1="'+(x+jitter(7)).toFixed(1)+'" y1="0" x2="'+(x+jitter(13)).toFixed(1)+'" y2="600" stroke="#cdd1d6" stroke-width="1.2"/>'); });
+  const hYs=[80,180,280,380,480]; hYs.forEach(function(y){ parts.push('<line x1="0" y1="'+(y+jitter(6)).toFixed(1)+'" x2="600" y2="'+(y+jitter(12)).toFixed(1)+'" stroke="#cdd1d6" stroke-width="1.2"/>'); });
+  parts.push('<line x1="'+jitter(20).toFixed(1)+'" y1="0" x2="'+(560+jitter(20)).toFixed(1)+'" y2="600" stroke="#b7bbc1" stroke-width="1.8"/>');
+  parts.push('<line x1="600" y1="'+(20+jitter(20)).toFixed(1)+'" x2="'+(60+jitter(20)).toFixed(1)+'" y2="600" stroke="#b7bbc1" stroke-width="1.8"/>');
+  let river = 'M -10 '+(120+jitter(16)).toFixed(1);
+  for(let x=20; x<=630; x+=34){ const y = 260 + Math.sin(x/110)*90 + jitter(24); river += ' L'+x.toFixed(1)+' '+y.toFixed(1); }
+  const riverColor = chaos>65 ? '#e05a4e' : (chaos>35 ? '#c9a13a' : '#7c9fc9');
+  parts.push('<path d="'+river+'" fill="none" stroke="'+riverColor+'" stroke-width="3" opacity="0.8" stroke-linecap="round"/>');
+
+  /* Government district — unlabeled building silhouettes, fixed positions on the square canvas */
+  const bstroke = '#9aa0a8';
+  parts.push('<g stroke="'+bstroke+'" stroke-width="1.5" fill="#fbfcfd">'+
+    '<rect x="255" y="270" width="90" height="60"/>'+
+    '<path d="M263 270 A32 32 0 0 1 337 270"/>'+
+    '<line x1="300" y1="236" x2="300" y2="252"/>'+
+    '<circle cx="300" cy="230" r="4"/>'+
+  '</g>');
+  parts.push('<g stroke="'+bstroke+'" stroke-width="1.3" fill="#fbfcfd">'+
+    '<rect x="140" y="285" width="80" height="45"/>'+
+    '<line x1="132" y1="285" x2="228" y2="285"/>'+
+    '<line x1="156" y1="285" x2="156" y2="330"/>'+
+    '<line x1="174" y1="285" x2="174" y2="330"/>'+
+    '<line x1="192" y1="285" x2="192" y2="330"/>'+
+    '<line x1="210" y1="285" x2="210" y2="330"/>'+
+    '<line x1="132" y1="330" x2="228" y2="330"/>'+
+  '</g>');
+  [[370,295,55,38],[100,340,48,32]].forEach(function(b){
+    parts.push('<g stroke="'+bstroke+'" stroke-width="1.2" fill="#fbfcfd">'+
+      '<rect x="'+b[0]+'" y="'+b[1]+'" width="'+b[2]+'" height="'+b[3]+'"/>'+
+      '<line x1="'+(b[0]+b[2]/2)+'" y1="'+b[1]+'" x2="'+(b[0]+b[2]/2)+'" y2="'+(b[1]-12)+'"/>'+
+    '</g>');
+  });
+
+  /* Data-driven dots — population, corruption, pollution, scaled to live stats */
+  const popN = Math.round(S.stats.employment/2.2);
+  for(let i=0;i<popN;i++){
+    const x = 20+Math.random()*560, y = 20+Math.random()*560;
+    parts.push('<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="1.8" fill="#8fa5c2" opacity="0.5"/>');
+  }
+  const corN = Math.round(S.stats.corruption/3);
+  for(let i=0;i<corN;i++){
+    const x = 230+Math.random()*160+jitter(30), y = 250+Math.random()*110+jitter(30);
+    parts.push('<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="2.4" fill="#c0453f" opacity="0.6"/>');
+  }
+  const polN = Math.round(S.stats.pollution/3);
+  for(let i=0;i<polN;i++){
+    const x = 400+Math.random()*180, y = 30+Math.random()*540;
+    parts.push('<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="2" fill="#8a7d5a" opacity="0.5"/>');
+  }
+
+  document.getElementById('citySvg').innerHTML = parts.join('');
+  const label = chaos>65 ? 'Fraying' : (chaos>35 ? 'Under strain' : 'Stable');
+  const el = document.getElementById('chaosLabel'); el.textContent = label; el.style.color = riverColor;
+}
+
+/* ---------------- score / phase ---------------- */
+function renderPop(){
+  const meta = [['working','Working'],['student','Student'],['sick','Sick'],['unemployed','Unemp.'],['retired','Retired']];
+  document.getElementById('popStrip').innerHTML = meta.map(function(p){
+    return '<div class="pop-tile" id="pop-'+p[0]+'"><div class="l">'+p[1]+'</div><div class="v mono">'+S.pop[p[0]]+'</div></div>';
+  }).join('');
+}
+function movePop(from, to, n){
+  const moved = Math.min(n, S.pop[from]||0);
+  if(moved<=0) return 0;
+  S.pop[from] -= moved; S.pop[to] = (S.pop[to]||0) + moved;
+  return moved;
+}
+function applyPopMoves(text){
+  const re = /Move (\d+) cubes?\s+(\w+)\s*(?:\u2192|->|to)\s*(\w+)/gi;
+  let m, moved=false;
+  while((m = re.exec(text))){
+    const n=parseInt(m[1],10), from=m[2].toLowerCase(), to=m[3].toLowerCase();
+    if(S.pop.hasOwnProperty(from) && S.pop.hasOwnProperty(to)){ movePop(from,to,n); moved=true; }
+  }
+  if(/Remove 1 (population )?cube|1 death/i.test(text)){
+    if(S.pop.sick>0) S.pop.sick -= 1; else if(S.pop.working>0) S.pop.working -= 1;
+    moved = true;
+  }
+  return moved;
+}
+function renderScoreStrip(highlightKey, good, deltaText){
+  document.getElementById('scoreStrip').innerHTML = STAT_META.map(function(p){
+    const v = p[0]==='treasury' ? '\u20b9'+S.stats[p[0]] : S.stats[p[0]];
+    return '<div class="score-tile" id="score-'+p[0]+'"><div class="l">'+p[1]+'</div><div class="v mono">'+v+'</div></div>';
+  }).join('');
+  if(highlightKey) pulseEl(document.getElementById('score-'+highlightKey), good, deltaText);
+}
+function renderPhaseSteps(){
+  const curIdx = PHASES.indexOf(S.phase);
+  document.getElementById('phaseSteps').innerHTML = PHASES.map(function(p,i){
+    const cls = p===S.phase ? 'active' : (i<curIdx ? 'done' : '');
+    const item = '<span class="crumb-item '+cls+'">'+PHASE_LABELS[p]+'</span>';
+    return i < PHASES.length-1 ? item+'<span class="crumb-sep">\u203a</span>' : item;
+  }).join('');
+}
+function addLog(id, text){
+  const el = document.getElementById(id);
+  if(el.querySelector('.side-log-empty')) el.innerHTML='';
+  const item = document.createElement('div'); item.className='side-log-item'; item.textContent=text;
+  el.insertBefore(item, el.firstChild);
+  while(el.children.length>5) el.removeChild(el.lastChild);
+}
+function renderPinned(){
+  const el = document.getElementById('pinnedList');
+  if(S.pins.length===0){ el.innerHTML='<div class="side-log-empty">Nothing pinned.</div>'; return; }
+  el.innerHTML = S.pins.map(function(p,i){
+    return '<div class="pin-item"><span>'+p+'</span><button data-i="'+i+'">×</button></div>';
+  }).join('');
+  el.querySelectorAll('button').forEach(function(b){
+    b.addEventListener('click', function(){ S.pins.splice(+b.dataset.i,1); renderPinned(); });
+  });
+}
+
+/* ---------------- department block grid ---------------- */
+function renderDeptGrid(){
+  document.getElementById('deptGrid').innerHTML = DEPT_LIST.map(function(d,i){
+    const dep = S.dep[d.id];
+    const locked = S.phase!=='department';
+    return '<div class="dept-block '+(i===S.turnIndex?'active':'')+(locked?' locked-turn':'')+'" data-i="'+i+'">'+
+      '<div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="'+d.color+'" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+d.icon+'</svg></div>'+
+      '<div class="nm">'+d.name.split(' ')[0]+'</div>'+
+      '<div class="ap">'+dep.ap+'/'+dep.apMax+' AP</div>'+
+    '</div>';
+  }).join('');
+  document.querySelectorAll('.dept-block').forEach(function(el){
+    el.addEventListener('click', function(){ changeTurn(+el.dataset.i); });
+  });
+}
+
+/* ---------------- focus panel (full detail) ---------------- */
+function tierCost(idx){
+  const m = TIER_COSTS[idx].match(/(\d+)\s*AP.*?\u20b9(\d+)/);
+  return { ap: m?parseInt(m[1],10):3, gc: m?parseInt(m[2],10):20 };
+}
+
+function renderFocus(entering){
+  const d = DEPT_LIST[S.turnIndex];
+  const dep = S.dep[d.id];
+  const mount = document.getElementById('focusMount');
+  const val = d.stat==='treasury' ? '\u20b9'+S.stats.treasury : (d.stat ? S.stats[d.stat] : '—');
+
+  const resHTML = d.resources.map(function(r){
+    return '<div class="res-row"><span class="l">'+r.label+'</span><span class="v mono">'+dep.res[r.key]+'</span></div>';
+  }).join('');
+
+  const actionsHTML = d.actions.map(function(a,i){
+    const cost = parseInt(a[1],10);
+    const disabled = isNaN(cost) || cost>dep.ap;
+    return '<button class="action-btn" data-i="'+i+'" '+(disabled?'disabled':'')+'>'+
+      '<div class="an"><span>'+a[0]+'</span><span class="ac">'+a[1]+'</span></div>'+
+      '<div class="ae">'+a[2]+'</div>'+
+    '</button>';
+  }).join('');
+
+  const tiersHTML = d.tiers.length ? d.tiers.map(function(t,i){
+    const done = i<dep.tier;
+    const cost = tierCost(i);
+    return '<div class="tier-row '+(done?'done':'')+'" data-tier="'+i+'"><span>'+t+'</span><span class="tc">'+(done?'unlocked':cost.ap+' AP + \u20b9'+cost.gc)+'</span></div>';
+  }).join('') : '<div style="font-size:0.6rem;color:var(--dim);">No upgrade tree — sponsors others instead.</div>';
+
+  mount.innerHTML =
+    '<div class="focus-card '+(entering?'enter':'')+'" style="--accent-dept:'+d.color+'; --accent-soft-dept:'+d.soft+';">'+
+      '<div class="focus-head">'+
+        '<div class="focus-icon" style="background:'+d.soft+';"><svg viewBox="0 0 24 24" fill="none" stroke="'+d.color+'" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+d.icon+'</svg></div>'+
+        '<div><h2>'+d.name+'</h2><p>Its turn — choose an action, upgrade, or pass.</p></div>'+
+      '</div>'+
+      '<div class="focus-stats">'+
+        '<div class="fstat" id="fstat-primary"><div class="l">'+(d.stat||'—')+'</div><div class="v mono">'+val+'</div></div>'+
+        '<div class="fstat" id="fstat-ap"><div class="l">AP</div><div class="v mono">'+dep.ap+'/'+dep.apMax+'</div></div>'+
+        '<div class="fstat" id="fstat-rep"><div class="l">Reputation</div><div class="v mono">'+dep.rep+'</div></div>'+
+        '<div class="fstat" id="fstat-wealth"><div class="l">Wealth</div><div class="v mono">\u20b9'+dep.wealth+'</div></div>'+
+      '</div>'+
+      '<div class="focus-scroll">'+
+        (d.resources.length ? '<div class="section-label">Resources</div>'+resHTML : '')+
+        '<div class="section-label">Actions</div>'+
+        '<div class="action-grid">'+actionsHTML+'</div>'+
+        '<div class="section-label">Upgrade Tree — Tier '+dep.tier+'</div>'+
+        tiersHTML+
+      '</div>'+
+      '<div class="end-turn-row"><button class="end-turn-btn" id="endTurnBtn">End Turn'+
+        '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'+
+      '</button></div>'+
+    '</div>';
+
+  mount.querySelectorAll('.action-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      const i = +btn.dataset.i, a = d.actions[i], cost = parseInt(a[1],10);
+      if(isNaN(cost) || cost>dep.ap) return;
+      const beforeNat = snapshotNationalStats();
+      const beforeAp = dep.ap;
+      dep.ap -= cost;
+      const deltas = parseEffectDeltas(a[2], d);
+      applyDeltas(d, deltas, dep);
+      const popMoved = applyPopMoves(a[2]);
+      const dur = animateNationalStats(beforeNat);
+      const apTile = document.getElementById('fstat-ap');
+      if(apTile) countUpValue(apTile, apTile.querySelector('.v'), beforeAp, dep.ap, false, false, 700);
+      if(popMoved) setTimeout(renderPop, Math.max(dur,700));
+      setTimeout(function(){
+        if(checkVictory()) return;
+        renderDeptGrid();
+        renderFocus(false);
+        maybeTriggerBribe(d.id);
+      }, Math.max(dur, 700)+150);
+    });
+  });
+  mount.querySelectorAll('.tier-row:not(.done)').forEach(function(row){
+    row.addEventListener('click', function(){
+      const idx = +row.dataset.tier;
+      if(idx!==dep.tier) return;
+      const c = tierCost(idx);
+      if(dep.ap<c.ap || S.stats.treasury<c.gc) return;
+      const beforeNat = snapshotNationalStats();
+      const beforeAp = dep.ap;
+      dep.ap -= c.ap; S.stats.treasury -= c.gc; dep.tier++;
+      const dur = animateNationalStats(beforeNat);
+      const apTile = document.getElementById('fstat-ap');
+      if(apTile) countUpValue(apTile, apTile.querySelector('.v'), beforeAp, dep.ap, false, false, 700);
+      setTimeout(function(){ if(checkVictory()) return; renderDeptGrid(); renderFocus(false); }, Math.max(dur,700)+150);
+    });
+  });
+  const endBtn = document.getElementById('endTurnBtn');
+  if(endBtn) endBtn.addEventListener('click', nextTurn);
+}
+
+/* ---------------- guide banner + phase gating ---------------- */
+function updateGuide(html, btnLabel, btnFn){
+  const el = document.getElementById('guideBanner');
+  el.innerHTML = '<span>'+html+'</span>' + (btnLabel ? '<button class="gbtn" id="guideBtn">'+btnLabel+'</button>' : '');
+  if(btnLabel){ document.getElementById('guideBtn').addEventListener('click', btnFn); }
+}
+function renderDeckStates(){
+  document.getElementById('crisisDeck').className = 'deck' + (S.phase==='crisis' ? '' : ' locked');
+  document.getElementById('bribeDeck').className = 'deck' + (S.phase==='department' ? '' : ' locked');
+}
+function updateHeaderCounts(){
+  document.getElementById('roundNum').textContent = S.round;
+  document.getElementById('phaseChip').textContent = 'TURN '+(S.turnIndex+1)+' / '+DEPT_LIST.length;
+  document.getElementById('crisisCount').textContent = CRISIS_CARDS.length;
+  document.getElementById('bribeCount').textContent = BRIBE_CARDS.length;
+}
+
+/* ---------------- turn / round flow (strictly sequential: Life -> Crisis -> Cabinet -> Election) ---------------- */
+function changeTurn(newIndex){
+  if(S.phase!=='department' || S.gameOver) return;
+  const mount = document.getElementById('focusMount');
+  const current = mount.querySelector('.focus-card');
+  if(current){
+    current.classList.add('exit');
+    setTimeout(function(){ S.turnIndex=newIndex; renderDeptGrid(); renderFocus(true); guideForCurrentDept(); }, 170);
+  } else { S.turnIndex=newIndex; renderDeptGrid(); renderFocus(true); guideForCurrentDept(); }
+}
+function guideForCurrentDept(){
+  const d = DEPT_LIST[S.turnIndex];
+  updateGuide('<b>'+d.name+'\u2019s turn</b> — pick an action, unlock a tier, or End Turn.', null, null);
+}
+function nextTurn(){
+  if(S.gameOver) return;
+  if(S.turnIndex < DEPT_LIST.length-1){ changeTurn(S.turnIndex+1); }
+  else { beginElectionPhase(); }
+}
+function lifePhase(){
+  const moves = [];
+  if(S.stats.health<40){ const n=movePop('working','sick',2); if(n) moves.push(n+' Working \u2192 Sick (Health<40)'); }
+  if(S.stats.health<25 && S.pop.sick>0){ S.pop.sick-=1; S.stats.trust=clamp(S.stats.trust-3); moves.push('1 death, Trust -3 (Health<25)'); }
+  if(S.stats.employment<50){ const n=movePop('working','unemployed',1); if(n) moves.push(n+' Working \u2192 Unemployed (Employment<50)'); }
+  if(S.stats.crime>60){ const n=movePop('working','sick',1); if(n) moves.push(n+' Working \u2192 Sick (Crime>60)'); }
+  if(S.stats.infrastructure>70 && S.stats.employment>60){ const n=movePop('unemployed','working',1); if(n) moves.push(n+' Unemployed \u2192 Working (Infra>70 & Emp>60)'); }
+  const tax = Math.round(S.pop.working*2 - (S.stats.inflation/100)*S.stats.treasury);
+  S.stats.treasury = Math.max(0, S.stats.treasury+tax);
+  return { tax: tax, moves: moves };
+}
+
+function beginRound(){
+  S.phase='life'; S.turnIndex=0;
+  updateHeaderCounts(); renderPhaseSteps(); renderCity(); renderPop(); renderDeckStates(); renderDeptGrid(); renderPinned();
+  document.getElementById('focusMount').innerHTML = '<div class="locked-note" style="flex:1;display:flex;align-items:center;justify-content:center;">Life Phase — checking population thresholds and collecting tax\u2026</div>';
+  const result = lifePhase();
+  const tax = result.tax;
+  const moveText = result.moves.length ? ' ' + result.moves.join('; ') + '.' : '';
+  updateGuide('<b>Life Phase</b> \u2014 Round '+S.round+' begins. Treasury changed by '+(tax>=0?'+':'')+tax+' GC from taxes.'+moveText, 'Continue to Crisis \u2192', function(){ beginCrisisPhase(); });
+  renderScoreStrip('treasury', tax>=0, (tax>=0?'+':'')+tax);
+  renderPop();
+}
+function beginCrisisPhase(){
+  S.phase='crisis'; renderPhaseSteps(); renderDeckStates();
+  document.getElementById('focusMount').innerHTML = '<div class="locked-note" style="flex:1;display:flex;align-items:center;justify-content:center;">Waiting for the Crisis card\u2026</div>';
+  updateGuide('<b>Crisis Phase</b> \u2014 tap the glowing Crisis Deck on the left to draw this round\u2019s event.', null, null);
+}
+function beginDepartmentPhase(){
+  S.phase='department'; S.turnIndex=0;
+  DEPT_LIST.forEach(function(d){
+    const dep=S.dep[d.id];
+    dep.apMax = 6 + (dep.tier>=2?1:0) + (dep.rep>=70?1:0) - (dep.rep<=20?1:0);
+    dep.ap = dep.apMax;
+  });
+  renderPhaseSteps(); renderDeckStates(); renderDeptGrid();
+  renderFocus(true);
+  guideForCurrentDept();
+}
+function beginElectionPhase(){
+  if(S.round % 4 !== 0){ proceedToNextRoundOrEnd(); return; }
+  S.phase='election'; renderPhaseSteps(); renderDeckStates(); renderDeptGrid();
+  const approval = (S.stats.trust*0.4)+(S.stats.employment*0.25)+((100-S.stats.crime)*0.2)+((100-Math.min(20,S.stats.inflation)*5)*0.15);
+  let resultText;
+  if(approval>=60){ resultText='Mandate retained \u2014 no penalty.'; }
+  else if(approval>=40){
+    let worst = DEPT_LIST[0];
+    DEPT_LIST.forEach(function(d){ if(S.dep[d.id].rep < S.dep[worst.id].rep) worst=d; });
+    S.dep[worst.id].rep = clamp(S.dep[worst.id].rep-10);
+    resultText = worst.name+' loses 10 Reputation.';
+  } else {
+    S.stats.corruption = clamp(S.stats.corruption+10);
+    S.stats.treasury = Math.floor(S.stats.treasury*0.8);
+    resultText = 'Coalition wobble \u2014 Corruption +10, Treasury \u221220%.';
+  }
+  document.getElementById('focusMount').innerHTML =
+    '<div class="locked-note" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;">'+
+    '<div style="font-size:1.4rem;font-weight:800;color:var(--ink);font-family:\'IBM Plex Mono\',monospace;">Approval '+approval.toFixed(1)+'</div>'+
+    '<div>'+resultText+'</div></div>';
+  const nextLabel = S.round>=12 ? 'See Final Result \u2192' : 'Continue to Round '+(S.round+1)+' \u2192';
+  updateGuide('<b>Election Check</b> \u2014 Approval '+approval.toFixed(1)+'. '+resultText, nextLabel, function(){
+    if(checkVictory()) return;
+    proceedToNextRoundOrEnd();
+  });
+}
+function proceedToNextRoundOrEnd(){
+  if(checkVictory()) return;
+  if(S.round>=12){
+    const s = S.stats;
+    const reform = s.corruption<=15 && s.trust>=85 && s.education>=80 && s.health>=80 && s.crime<=20 && s.treasury>=0;
+    if(reform){
+      endGame('Reform Victory!', 'After 12 rounds, the nation stands transformed \u2014 Trust '+s.trust+', Corruption '+s.corruption+', Health '+s.health+', Education '+s.education+', Crime '+s.crime+'. Everyone wins.');
+    } else {
+      endGame('Term Ends \u2014 No Clear Verdict', 'Twelve rounds are up with no path fully realized. Highest Trust as tiebreaker: '+s.trust+'.');
+    }
+    return;
+  }
+  S.round++; beginRound();
+}
+function checkVictory(){
+  if(S.gameOver) return true;
+  if(S.stats.corruption >= 95){
+    endGame('Criminal Syndicate Takeover', 'Corruption has reached '+S.stats.corruption+'. The state has been captured by organized crime. Everyone loses \u2014 the game ends here.');
+    return true;
+  }
+  for(let i=0;i<DEPT_LIST.length;i++){
+    const dd = DEPT_LIST[i], dp = S.dep[dd.id];
+    if(dp.wealth>=150 && dp.rep>S.stats.trust){
+      endGame('Oligarch Victory', dd.name+' has amassed \u20b9'+dp.wealth+' in personal wealth and now commands more public trust ('+dp.rep+') than the nation itself (Trust '+S.stats.trust+'). They have effectively captured the state.');
+      return true;
+    }
+  }
+  return false;
+}
+function endGame(title, text){
+  S.gameOver = true;
+  document.getElementById('focusMount').innerHTML =
+    '<div class="locked-note" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:20px;">'+
+    '<div style="font-size:1.5rem;font-weight:800;color:var(--ink);font-style:normal;">'+title+'</div>'+
+    '<div style="max-width:80%;text-align:center;font-style:normal;">'+text+'</div></div>';
+  updateGuide('<b>GAME OVER \u2014 '+title+'</b>', null, null);
+  document.getElementById('crisisDeck').classList.add('locked');
+  document.getElementById('bribeDeck').classList.add('locked');
+  document.querySelectorAll('.dept-block').forEach(function(el){ el.classList.add('locked-turn'); });
+}
+
+function maybeTriggerBribe(deptId){
+  const options = BRIBE_CARDS.filter(function(b){ return b[0].toLowerCase()===deptId; });
+  if(deptId==='pm' || options.length===0 || Math.random()>0.4) return;
+  const card = options[Math.floor(Math.random()*options.length)];
+  const title=card[1], offer=card[2], accept=card[3], decline=card[4];
+  const dep = S.dep[deptId]; const d = DEPT_LIST.find(function(x){return x.id===deptId;});
+  const amtM = accept.match(/\u20b9(\d+)/); const amt = amtM?parseInt(amtM[1],10):10;
+  showReveal('right', {
+    kicker:'Offer', title:title, body:offer, tags:[d.name.split(' ')[0]],
+    lingering: hasLingering(accept),
+    decisionHTML:'<div class="reveal-actions"><button class="btn-decline" id="declineBtn">Decline</button><button class="btn-accept" id="acceptBtn">Accept +\u20b9'+amt+'</button></div>'+
+      '<div class="reveal-effect">If accepted: '+accept+'</div><div class="reveal-effect">If declined: '+decline+'</div>',
+    onMount:function(){
+      document.getElementById('acceptBtn').addEventListener('click', function(){
+        const beforeNat = snapshotNationalStats();
+        const beforeDep = { ap:dep.ap, rep:dep.rep, wealth:dep.wealth };
+        hideReveal();
+        dep.wealth += amt;
+        applyDeltas(d, parseEffectDeltas(accept, d), dep);
+        const popMoved = applyPopMoves(accept);
+        addLog('bribeLog', title+' — accepted');
+        const dur = animateNationalStats(beforeNat);
+        animateFocusDeptStats(beforeDep);
+        if(popMoved) setTimeout(renderPop, Math.max(dur,750));
+        setTimeout(function(){ if(checkVictory()) return; renderDeptGrid(); renderFocus(false); }, Math.max(dur, 750)+150);
+      });
+      document.getElementById('declineBtn').addEventListener('click', function(){
+        const beforeDep = { ap:dep.ap, rep:dep.rep, wealth:dep.wealth };
+        hideReveal();
+        const repM = decline.match(/Reputation \+(\d+)/i);
+        if(repM) dep.rep = clamp(dep.rep+parseInt(repM[1],10));
+        addLog('bribeLog', title+' — declined');
+        animateFocusDeptStats(beforeDep);
+        setTimeout(function(){ if(checkVictory()) return; renderFocus(false); }, 900);
+      });
+    },
+    pinContext: title+' ('+d.name.split(' ')[0]+')'
+  });
+}
+
+function drawCrisis(after){
+  const card = CRISIS_CARDS[Math.floor(Math.random()*CRISIS_CARDS.length)];
+  const name=card[0], trigger=card[1], effect=card[2], tags=card[3];
+  showReveal('left', {
+    kicker:'Crisis', title:name, body:trigger,
+    tags: tags.map(function(t){ const f=DEPT_LIST.find(function(dd){return dd.id===t;}); return f?f.name.split(' ')[0]:t; }),
+    lingering: hasLingering(effect),
+    decisionHTML:'<div class="reveal-effect"><b>Effect:</b> '+effect+'</div><button class="btn-ok" id="revealOkBtn">Applied — Continue \u2192</button>',
+    onMount:function(){
+      document.getElementById('revealOkBtn').addEventListener('click', function(){
+        const before = snapshotNationalStats();
+        hideReveal();
+        applyDeltas(null, parseEffectDeltas(effect, null), {res:{}});
+        const popMoved = applyPopMoves(effect);
+        addLog('crisisLog', name);
+        const dur = animateNationalStats(before);
+        if(popMoved) setTimeout(renderPop, Math.max(dur,0));
+        setTimeout(function(){ if(checkVictory()) return; after(); }, dur + 250);
+      });
+    },
+    pinContext: name
+  });
+}
+
+function showReveal(fromSide, opts){
+  document.getElementById('revealKicker').textContent = opts.kicker;
+  document.getElementById('revealTitle').textContent = opts.title;
+  document.getElementById('revealBody').textContent = opts.body;
+  document.getElementById('revealTags').innerHTML = (opts.tags||[]).map(function(t){ return '<span class="reveal-tag">'+t+'</span>'; }).join('');
+  document.getElementById('revealEffect').style.display='none';
+  document.getElementById('revealDecision').innerHTML = opts.decisionHTML;
+  const cardEl = document.getElementById('revealCard');
+  cardEl.classList.remove('from-left','from-right'); void cardEl.offsetWidth;
+  cardEl.classList.add(fromSide==='left'?'from-left':'from-right');
+  const pinBtn = document.getElementById('pinBtn');
+  if(opts.lingering){
+    pinBtn.classList.remove('hidden'); pinBtn.disabled=false; pinBtn.textContent='📌 Pin as a reminder for later rounds';
+    pinBtn.onclick=function(){ S.pins.push(opts.pinContext||opts.title); renderPinned(); pinBtn.disabled=true; pinBtn.textContent='📌 Pinned'; };
+  } else { pinBtn.classList.add('hidden'); }
+  document.getElementById('revealOverlay').classList.remove('hidden');
+  opts.onMount();
+}
+function hideReveal(){ document.getElementById('revealOverlay').classList.add('hidden'); }
+
+document.getElementById('crisisDeck').addEventListener('click', function(){
+  if(S.phase!=='crisis' || S.gameOver) return;
+  drawCrisis(function(){ beginDepartmentPhase(); });
+});
+document.getElementById('bribeDeck').addEventListener('click', function(){
+  if(S.phase!=='department' || S.gameOver) return;
+  const card = BRIBE_CARDS[Math.floor(Math.random()*BRIBE_CARDS.length)];
+  showReveal('right', {
+    kicker:'Offer Preview', title:card[1], body:card[2], tags:[card[0]], lingering:false,
+    decisionHTML:'<div class="reveal-effect">If accepted: '+card[3]+'</div><div class="reveal-effect">If declined: '+card[4]+'</div><button class="btn-ok" id="revealOkBtn">Close</button>',
+    onMount:function(){ document.getElementById('revealOkBtn').addEventListener('click', hideReveal); }
+  });
+});
+
+document.getElementById('victoryToggle').addEventListener('click', function(){
+  document.getElementById('victoryPanel').classList.toggle('open');
+});
+document.getElementById('pinnedToggle').addEventListener('click', function(){
+  document.getElementById('pinnedPanel').classList.toggle('open');
+});
+
+beginRound();
+</script>
+</body>
+</html>
